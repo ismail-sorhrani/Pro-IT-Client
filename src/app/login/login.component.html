@@ -1,0 +1,20 @@
+<div class="centered-element">
+  <div class="card">
+    <div class="card-header">Authentication</div>
+    <div class="card-body">
+      <form [formGroup]="formLogin" (ngSubmit)="submitLogin()" >
+        <div>
+          <label class="form-label">Username</label>
+          <input type="text" class="form-control" formControlName="username">
+        </div>
+        <div>
+          <label class="form-label">Password</label>
+          <input type="password" class="form-control" formControlName="password">
+        </div>
+        <button class="btn btn-success">Login</button>
+
+      </form>
+    </div>
+
+  </div>
+</div>

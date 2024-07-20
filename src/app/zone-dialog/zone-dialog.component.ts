@@ -1,8 +1,10 @@
 import {Component, Inject, inject, model, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material/dialog";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {Zone} from "../models/model/model.module";
 import {ZoneService} from "../services/zone.service";
+import {AeroportService} from "../services/aeroport.service";
+import {MatTableDataSource} from "@angular/material/table";
+import {Aeroport} from "../models/model/model.module";
 
 @Component({
   selector: 'app-zone-dialog',
@@ -11,10 +13,12 @@ import {ZoneService} from "../services/zone.service";
 })
 export class ZoneDialogComponent implements OnInit{
   formZone!:FormGroup;
+  aeroports: Aeroport[] = [];
   constructor(@Inject(MAT_DIALOG_DATA) public data:any,
               private dialogRef:MatDialogRef<ZoneDialogComponent>,
               private fb:FormBuilder,
-              private zoneService:ZoneService) {
+              private zoneService:ZoneService,
+              private aeroportService:AeroportService) {
   }
 
 
@@ -28,11 +32,13 @@ export class ZoneDialogComponent implements OnInit{
 
 
   ngOnInit(): void {
+    this.getAllAeroports();
     this.formZone = this.fb.group({
       id: [this.data.zone.id || null],
       zoneName: [this.data.zone.zoneName, Validators.required],
       aeroportName: [this.data.zone.aeroportName, Validators.required]
     });
+
   }
 
   saveZone(): void {
@@ -64,6 +70,18 @@ export class ZoneDialogComponent implements OnInit{
     } else {
       console.log('Form is invalid');
     }
+  }
+
+  getAllAeroports(){
+    this.aeroportService.getAllAeroports().subscribe({
+      next:data => {
+        console.log("Aerports : ",data);
+        this.aeroports=data;
+      },
+      error:err => {
+        console.log("Aerports ERRor : "+err);
+      }
+    })
   }
 
   /*saveZone(): void {

@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, model, OnInit, signal} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, model, OnInit, signal, ViewChild} from '@angular/core';
 import {MatDialog} from "@angular/material/dialog";
 import {ZoneDialogComponent} from "../zone-dialog/zone-dialog.component";
 import {ZoneService} from "../services/zone.service";
@@ -6,6 +6,7 @@ import {Zone} from "../models/model/model.module";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatPaginator} from "@angular/material/paginator";
 
 @Component({
   selector: 'app-zone',
@@ -16,6 +17,7 @@ export class ZoneComponent implements OnInit{
   displayedColumns: string[] = ['id', 'zoneName', 'aeroportName','action'];
   public dataSource! : any;
   public zones!:any;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
   constructor(private dialog:MatDialog,
               private zoneService:ZoneService,
               private fb:FormBuilder,
@@ -23,8 +25,12 @@ export class ZoneComponent implements OnInit{
               private snackBar: MatSnackBar) {
   }
 
+
+
+
   ngOnInit(): void {
     this.fetchZones();
+
   }
   fetchZones(): void {
     this.zoneService.getAllZones().subscribe({
@@ -32,6 +38,7 @@ export class ZoneComponent implements OnInit{
         console.log('Data received: ', data);
         this.zones = data;
         this.dataSource = new MatTableDataSource(this.zones);
+        this.dataSource.paginator = this.paginator;
         this.cdr.detectChanges();
       },
       error: err => {

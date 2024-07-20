@@ -29,6 +29,9 @@ import { ZoneDialogComponent } from './zone-dialog/zone-dialog.component';
 import {MatDialogActions, MatDialogClose, MatDialogContent} from "@angular/material/dialog";
 import {MatFormField, MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
+import {MatOption, MatSelect, MatSelectModule} from "@angular/material/select";
+import {MatOptionModule} from "@angular/material/core";
+import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
 
 @NgModule({
   declarations: [
@@ -66,7 +69,10 @@ import {MatInputModule} from "@angular/material/input";
     MatDialogActions,
     MatFormFieldModule,
     MatDialogClose,
-    MatInputModule
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatPaginatorModule
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AppHttpInterceptor, multi: true },

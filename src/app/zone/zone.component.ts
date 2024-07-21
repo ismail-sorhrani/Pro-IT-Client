@@ -78,20 +78,12 @@ export class ZoneComponent implements OnInit{
     }
   }
 
-  /*openDialog(): void {
-    const dialogRef = this.dialog.open(ZoneDialogComponent, {
-        data:{
-          title:"Ajooter Zone"
-        }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed : '+result);
-      this.fetchZones();
+  applyFilter(event: Event) {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
 
 
-    });
-  }*/
 
 
 }

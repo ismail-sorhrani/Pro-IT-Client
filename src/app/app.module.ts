@@ -32,6 +32,10 @@ import {MatInputModule} from "@angular/material/input";
 import {MatOption, MatSelect, MatSelectModule} from "@angular/material/select";
 import {MatOptionModule} from "@angular/material/core";
 import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
+import { AeroportDialogComponent } from './aeroport-dialog/aeroport-dialog.component';
+import { CompagnieComponent } from './compagnie/compagnie.component';
+import { CompagnieDialogComponent } from './compagnie-dialog/compagnie-dialog.component';
+import { ComptoireDialogComponent } from './comptoire-dialog/comptoire-dialog.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +50,11 @@ import {MatPaginator, MatPaginatorModule} from "@angular/material/paginator";
     AeroportComponent,
     ReportingComponent,
     CustomSidebarComponent,
-    ZoneDialogComponent
+    ZoneDialogComponent,
+    AeroportDialogComponent,
+    CompagnieComponent,
+    CompagnieDialogComponent,
+    ComptoireDialogComponent
   ],
   imports: [
     BrowserModule,

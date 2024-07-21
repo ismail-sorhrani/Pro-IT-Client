@@ -10,6 +10,7 @@ import {ReportingComponent} from "./reporting/reporting.component";
 import {ZoneComponent} from "./zone/zone.component";
 import {AeroportComponent} from "./aeroport/aeroport.component";
 import {ComptoireComponent} from "./comptoire/comptoire.component";
+import {CompagnieComponent} from "./compagnie/compagnie.component";
 
 const routes: Routes = [
   {path : "", redirectTo :"/login" ,pathMatch:"full"},
@@ -17,6 +18,8 @@ const routes: Routes = [
   {path :"admin", component:AdminComponent ,
     canActivate:[AuthenticationGuard],
     children :[
+
+      {path : "compagnie", component: CompagnieComponent},
       {path : "reporting", component: ReportingComponent},
       {path : "zone", component: ZoneComponent},
       {path : "aeroport", component: AeroportComponent},

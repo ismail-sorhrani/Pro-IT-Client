@@ -24,3 +24,16 @@ export interface ComptoireDTO {
   aeroportName: string;
   zoneId: number;
 }
+export interface EquipmentDTO {
+  id: number;
+  equipmentName: string;
+
+}
+export interface Probleme {
+  id: number;
+  libelle: string;
+}
+export interface Solution {
+  id: number;
+  libelle: string;
+}

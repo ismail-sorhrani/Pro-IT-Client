@@ -36,6 +36,14 @@ import { AeroportDialogComponent } from './aeroport-dialog/aeroport-dialog.compo
 import { CompagnieComponent } from './compagnie/compagnie.component';
 import { CompagnieDialogComponent } from './compagnie-dialog/compagnie-dialog.component';
 import { ComptoireDialogComponent } from './comptoire-dialog/comptoire-dialog.component';
+import { EquipmentComponent } from './equipment/equipment.component';
+import { EquipmentDialogComponent } from './equipment-dialog/equipment-dialog.component';
+import { ProblemeComponent } from './probleme/probleme.component';
+import { ProblemeDialogComponent } from './probleme-dialog/probleme-dialog.component';
+import { SolutionComponent } from './solution/solution.component';
+import { SolutionDialogComponent } from './solution-dialog/solution-dialog.component';
+import { InterventionComponent } from './intervention/intervention.component';
+import { InterventionDialogComponent } from './intervention-dialog/intervention-dialog.component';
 
 @NgModule({
   declarations: [
@@ -54,7 +62,15 @@ import { ComptoireDialogComponent } from './comptoire-dialog/comptoire-dialog.co
     AeroportDialogComponent,
     CompagnieComponent,
     CompagnieDialogComponent,
-    ComptoireDialogComponent
+    ComptoireDialogComponent,
+    EquipmentComponent,
+    EquipmentDialogComponent,
+    ProblemeComponent,
+    ProblemeDialogComponent,
+    SolutionComponent,
+    SolutionDialogComponent,
+    InterventionComponent,
+    InterventionDialogComponent
   ],
   imports: [
     BrowserModule,

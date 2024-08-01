@@ -84,21 +84,6 @@ export class ZoneDialogComponent implements OnInit{
     })
   }
 
-  /*saveZone(): void {
-    if (this.formZone.valid) {
-      const { zoneName, aeroportName } = this.formZone.value;
-      console.log(this.formZone.value);
-      this.zoneService.saveZone(zoneName, aeroportName).subscribe({
-        next: response => {
-          console.log('Zone saved:', response);
-        },
-        error: err => {
-          console.log('Error saving zone:', err);
-        }
-      });
-    } else {
-      console.log('Form is invalid');
-    }
-  }*/
+
 }
 

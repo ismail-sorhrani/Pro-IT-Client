@@ -1,8 +1,13 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-import {ComptoireDTO} from "../models/model/model.module";
+import {Aeroport, ComptoireDTO} from "../models/model/model.module";
 import {MatPaginator} from "@angular/material/paginator";
 import {ComptoireService} from "../services/comptoire.service";
+import {ZoneDialogComponent} from "../zone-dialog/zone-dialog.component";
+import {MatDialog} from "@angular/material/dialog";
+import {FormBuilder} from "@angular/forms";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {ComptoireDialogComponent} from "../comptoire-dialog/comptoire-dialog.component";
 
 @Component({
   selector: 'app-comptoire',
@@ -10,24 +15,62 @@ import {ComptoireService} from "../services/comptoire.service";
   styleUrl: './comptoire.component.css'
 })
 export class ComptoireComponent implements OnInit{
-
-  constructor(private comptoireService:ComptoireService) {
+  comptoires: ComptoireDTO[] = [];
+  constructor(private comptoireService:ComptoireService,
+              private dialog:MatDialog,
+              private fb:FormBuilder,
+              private cdr: ChangeDetectorRef,
+              private snackBar: MatSnackBar) {
   }
-  displayedColumns: string[] = ['id', 'comptoireName', 'zoneAeroport'];
+  displayedColumns: string[] = ['id', 'comptoireName', 'zoneAeroport',"action"];
   dataSource = new MatTableDataSource<ComptoireDTO>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   ngOnInit(): void {
+    this.fetchComptoires();
+
+  }
+
+  fetchComptoires(){
     this.comptoireService.getAllComptoires().subscribe(data => {
       this.dataSource.data = data;
       this.dataSource.paginator = this.paginator;
+      this.comptoires=data;
       console.log("comptoire",data);
     });
-
   }
 
-  openDialog() {
+  openDialog(comptoire?: any): void {
+    const dialogRef = this.dialog.open(ComptoireDialogComponent, {
+      data: {
+        title: comptoire ? 'Modifier Comptoire' : 'Ajouter Comptoire',
+        comptoire: comptoire || {}
+      }
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.fetchComptoires();
+      }
+    });
   }
+
+  deleteComptoire(comptoire: any): void {
+    if (confirm(`Voulez-vous vraiment supprimer la zone ${comptoire.zoneName}?`)) {
+      this.comptoireService.deleteComptoire(comptoire).subscribe({
+        next: () => {
+          this.snackBar.open('Comptoire supprimée', 'Fermer', {
+            duration: 3000,
+          });
+          this.fetchComptoires();
+        },
+        error: err => {
+          console.log('Error deleting comptoire:', err);
+        }
+      });
+    }
+  }
+
+
 }

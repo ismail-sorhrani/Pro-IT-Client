@@ -12,8 +12,13 @@
     </mat-form-field>
     <mat-form-field class="custom-form-field">
       <mat-label>Utilisateur</mat-label>
-      <input matInput formControlName="appUser" readonly>
+      <mat-select formControlName="appUser">
+        <mat-option *ngFor="let user of users" [value]="user.id">
+          {{ user.username }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
+
     <mat-form-field class="custom-form-field">
       <mat-label>Comptoire</mat-label>
       <mat-select formControlName="comptoire">
@@ -26,8 +31,7 @@
       <mat-label>Equipment</mat-label>
       <mat-select formControlName="equipment">
         <mat-option *ngFor="let equipment of equipments" [value]="equipment.id">
-          {{ equipment.equipmentName
-          }}
+          {{ equipment.equipementName }}
         </mat-option>
       </mat-select>
     </mat-form-field>

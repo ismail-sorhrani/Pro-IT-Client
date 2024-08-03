@@ -13,6 +13,9 @@ export class EquipmentService {
   getAllEquipments(): Observable<EquipmentDTO[]> {
     return this.http.get<EquipmentDTO[]>(this.apiUrl+"equipments");
   }
+  getAllEquipmentss():Observable<Array<EquipmentDTO>>{
+    return this.http.get<Array<EquipmentDTO>>("http://localhost:8082/admin/equipmentss");
+  }
 
   addOrUpdateEquipment(equipment: EquipmentDTO): Observable<EquipmentDTO> {
     return this.http.post<EquipmentDTO>(this.apiUrl+"equipement", equipment);

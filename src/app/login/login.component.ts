@@ -37,7 +37,7 @@ export class LoginComponent implements OnInit{
             this.router.navigateByUrl("/technicien");
         }
         else {
-          console.log("je suis helpDesk AUth");
+            this.router.navigateByUrl("/helpdesk");
         }
       },
       error:err => {

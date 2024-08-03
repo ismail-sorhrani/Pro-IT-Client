@@ -23,6 +23,9 @@ export class AuthServiceService {
     let params =new HttpParams().set("username",username).set("password",password);
     return this.http.post("http://localhost:8082/login",params);
   }
+  getToken(): string | null {
+    return window.localStorage.getItem('jwt-token');
+  }
   loadProfile(data:any){
     this.isAuthenticated=true;
     console.log("pp "+this.isAuthenticated);
@@ -71,6 +74,9 @@ export class AuthServiceService {
       }
 
     }
+  }
+  getUsername(): string | undefined {
+    return this.username;
   }
 
 }

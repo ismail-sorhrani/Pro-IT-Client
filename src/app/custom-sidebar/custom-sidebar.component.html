@@ -1,39 +1,47 @@
 <mat-nav-list >
-  <a mat-list-item routerLink="/admin/reporting">
+  <a mat-list-item routerLink="/admin/reporting"  *ngIf="isAdmin">
     <mat-icon matListItemIcon>assessment</mat-icon>
     <span matListItemTitle>Reporting</span>
   </a>
-  <a mat-list-item routerLink="/admin/zone">
+  <a mat-list-item routerLink="/admin/zone"  *ngIf="isAdmin">
     <mat-icon fontIcon="pin_drop" matListItemIcon >menu</mat-icon>
     <span style="color: blue" matListItemTitle>Zones</span>
   </a>
-  <a mat-list-item routerLink="/admin/aeroport">
+  <a mat-list-item routerLink="/admin/aeroport"  *ngIf="isAdmin">
     <mat-icon fontIcon="flight_takeoff" matListItemIcon></mat-icon>
     <span matListItemTitle>Aeroport</span>
   </a>
-  <a mat-list-item routerLink="/admin/compagnie">
+  <a mat-list-item routerLink="/admin/compagnie"  *ngIf="isAdmin">
     <mat-icon fontIcon="business_center" matListItemIcon></mat-icon>
     <span matListItemTitle>Compagnie</span>
   </a>
-  <a mat-list-item routerLink="/admin/comptoire">
+  <a mat-list-item routerLink="/admin/comptoire"  *ngIf="isAdmin">
     <mat-icon fontIcon="domain" matListItemIcon></mat-icon>
     <span matListItemTitle>comptoire</span>
   </a>
-  <a mat-list-item routerLink="/admin/equipment">
+  <a mat-list-item routerLink="/admin/equipment"  *ngIf="isAdmin">
     <mat-icon fontIcon="settings_input_composite" matListItemIcon></mat-icon>
     <span matListItemTitle>equipment</span>
   </a>
-  <a mat-list-item routerLink="/admin/probleme">
+  <a mat-list-item routerLink="/admin/probleme"  *ngIf="isAdmin">
     <mat-icon fontIcon="report_problem" matListItemIcon></mat-icon>
     <span matListItemTitle>probleme</span>
   </a>
-  <a mat-list-item routerLink="/admin/solution">
+  <a mat-list-item routerLink="/admin/solution"  *ngIf="isAdmin">
     <mat-icon fontIcon="sync_problem" matListItemIcon></mat-icon>
     <span matListItemTitle>solution</span>
   </a>
-  <a mat-list-item routerLink="/admin/intervention">
+  <a mat-list-item routerLink="/admin/intervention" *ngIf="isAdmin">
     <mat-icon fontIcon="report" matListItemIcon></mat-icon>
     <span matListItemTitle>intervention</span>
+  </a>
+  <a mat-list-item routerLink="/technicien/intervention" *ngIf="isTechnicien">
+    <mat-icon matListItemIcon>report_problem</mat-icon>
+    <span matListItemTitle> My Interventions</span>
+  </a>
+  <a mat-list-item routerLink="/helpdesk/intervention" *ngIf="isHelpdesk">
+    <mat-icon matListItemIcon>report_problem</mat-icon>
+    <span matListItemTitle> My Interventions</span>
   </a>
 
 

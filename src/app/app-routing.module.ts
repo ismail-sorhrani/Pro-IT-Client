@@ -36,12 +36,13 @@ const routes: Routes = [
   {path :"technicien", component:TechnicienComponent ,
     canActivate:[AuthenticationGuard]
     ,children :[
-
-      {path : "products",component:ProductsComponent}
-
+      {path : "intervention", component:InterventionComponent}
     ]},
   {path :"helpdesk", component:HelpdeskComponent ,
-    canActivate:[AuthenticationGuard]
+    canActivate:[AuthenticationGuard],
+    children:[
+      {path : "intervention", component:InterventionComponent}
+    ]
     }
 
 ];

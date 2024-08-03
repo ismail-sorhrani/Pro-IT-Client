@@ -37,3 +37,27 @@ export interface Solution {
   id: number;
   libelle: string;
 }
+export interface Intervention {
+  id: number;
+  status: string;
+  date: Date;
+  heureDebut: Date;
+  heureFin: Date | null;
+  compagnie: number;
+  appUser: number;
+  comptoire: number;
+  equipment: number;
+  solution: number;
+  probleme: number;
+  aeroport: number;
+}
+export interface appUser{
+  id:number,
+  nom:string,
+}
+export interface DecodedToken {
+  exp: number;
+  roles: string[];
+  sub: string;
+}
+

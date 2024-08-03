@@ -14,6 +14,10 @@ export class ProblemeService {
     return this.http.get<Probleme[]>(this.apiUrl+"problemes");
   }
 
+  getAllProblemss():Observable<Array<Probleme>>{
+    return this.http.get<Array<Probleme>>("http://localhost:8082/admin/problemes");
+  }
+
   /*getProblemeById(id: number): Observable<Probleme> {
     return this.http.get<Probleme>(`${this.apiUrl}/${id}`);
   }*/

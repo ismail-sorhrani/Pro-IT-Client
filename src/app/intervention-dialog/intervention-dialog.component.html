@@ -14,14 +14,24 @@
       <mat-label>Utilisateur</mat-label>
       <input matInput formControlName="appUser" readonly>
     </mat-form-field>
+
     <mat-form-field class="custom-form-field">
       <mat-label>Comptoire</mat-label>
       <mat-select formControlName="comptoire">
         <mat-option *ngFor="let comptoire of comptoires" [value]="comptoire.id">
-          {{ comptoire.comptoireName }}
+          {{ comptoire.comptoireName }} : {{comptoire.zoneName || '--'}} : {{comptoire.aeroportName || '--'}}
         </mat-option>
       </mat-select>
     </mat-form-field>
+    <!--<mat-form-field class="custom-form-field">
+      <mat-label>Aéroport</mat-label>
+      <mat-select formControlName="aeroport">
+        <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport.id">
+          {{ aeroport.aeroportName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>-->
+    <div *ngIf="data.intervention?.id && data.intervention?.status === 'FERMER'">
     <mat-form-field class="custom-form-field">
       <mat-label>Equipment</mat-label>
       <mat-select formControlName="equipment">
@@ -47,14 +57,8 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="custom-form-field">
-      <mat-label>Aéroport</mat-label>
-      <mat-select formControlName="aeroport">
-        <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport.id">
-          {{ aeroport.aeroportName }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    </div>
+
   </div>
   <div mat-dialog-actions class="dialog-actions">
     <button mat-raised-button type="submit" color="primary" class="submit-button">Sauvegardez</button>

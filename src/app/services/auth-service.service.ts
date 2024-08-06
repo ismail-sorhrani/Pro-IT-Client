@@ -3,6 +3,7 @@ import {HttpClient, HttpParams} from "@angular/common/http";
 import {jwtDecode} from "jwt-decode";
 import {Router} from "@angular/router";
 import {environment} from "../../environments/environment";
+import {AppUserService} from "./app-user.service";
 interface DecodedToken {
   exp: number;
   roles:string[];
@@ -15,7 +16,8 @@ export class AuthServiceService {
   roles:any;
   username:any;
   accessToken!: any;
-  constructor(private http:HttpClient,private router:Router) { }
+  aeroport!:any;
+  constructor(private http:HttpClient,private router:Router,private appUserService:AppUserService) { }
   public login(username:string,password:string){
     // let options={
     //   headers:new HttpHeaders().set("Content-Type","")
@@ -34,8 +36,13 @@ export class AuthServiceService {
     this.username=jwtDecoder.sub;
     let claims :any =JSON.parse(window.atob(this.accessToken.split('.')[1]));
     this.roles=claims.roles;
+    this.aeroport=claims.aeroport;
     console.log("les roles :"+this.roles);
     console.log("le user : "+this.username);
+    this.appUserService.getAeroport(this.username).subscribe((data: any[]) => {
+      this.aeroport=data;
+      console.log("AEROPORT : ",this.aeroport.id);
+    });
     window.localStorage.setItem("jwt-token",this.accessToken);
 
     }

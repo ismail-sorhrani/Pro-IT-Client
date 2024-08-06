@@ -12,15 +12,29 @@ export class InterventionService {
 
   private baseUrl1 = 'http://localhost:8082/technicien';
   private baseUrl2 = 'http://localhost:8082/helpdesk';
+  private baseUrl3 = 'http://localhost:8082/admin';
 
   constructor(private http: HttpClient, private authService: AuthServiceService) {}
 
-  getAllInterventions(): Observable<Intervention[]> {
-    return this.http.get<Intervention[]>(`${this.baseUrl1}/interventionns`);
+  getAllInterventions(username: string): Observable<Intervention[]> {
+    return this.http.get<Intervention[]>(`${this.baseUrl1}/interventions/username`,
+      {
+        params: { username }
+      }
+      );
+  }
+  getAllInterventiions(): Observable<Intervention[]> {
+    return this.http.get<Intervention[]>(`${this.baseUrl1}/interventions`
+    );
   }
   getAllInterventionsHelp(): Observable<Intervention[]> {
     return this.http.get<Intervention[]>(`${this.baseUrl2}/interventions`);
   }
+  getAllInterventionsHelpId(id: number): Observable<Intervention[]> {
+    console.log("bad , id ",id);
+    return this.http.get<Intervention[]>(`${this.baseUrl2}/interventions/id/${id}`);
+  }
+
 
 
   addIntervention(intervention: Intervention): Observable<Intervention> {

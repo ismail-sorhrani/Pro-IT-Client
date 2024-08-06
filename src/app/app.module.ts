@@ -48,6 +48,9 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {InterventionDialogHelpComponent} from "./intervention-dialog-help/intervention-dialog-help.component";
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import { FinishInterventionDialogComponent } from './finish-intervention-dialog/finish-intervention-dialog.component';
+import { InterventionFinComponent } from './intervention-fin/intervention-fin.component';
+import { InterventionHistoriqueComponent } from './intervention-historique/intervention-historique.component';
 
 @NgModule({
   declarations: [
@@ -75,7 +78,10 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
     SolutionDialogComponent,
     InterventionComponent,
     InterventionDialogComponent,
-    InterventionDialogHelpComponent
+    InterventionDialogHelpComponent,
+    FinishInterventionDialogComponent,
+    InterventionFinComponent,
+    InterventionHistoriqueComponent
   ],
   imports: [
     BrowserModule,

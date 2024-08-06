@@ -29,7 +29,7 @@ export class InterventionDialogHelpComponent {
   aeroports!: any[];
   minDate: Date;
   minTime: string;
-
+  aeroport!:any;
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<InterventionDialogHelpComponent>,
@@ -64,18 +64,23 @@ export class InterventionDialogHelpComponent {
       compagnie: [this.data.intervention?.compagnie?.id || '', Validators.required],
       appUser: [this.data.intervention?.appUser?.id || '', Validators.required],
       comptoire: [this.data.intervention?.comptoire?.id || '', Validators.required],
-      equipment: [this.data.intervention?.equipment?.id || '', Validators.required],
-      solution: [this.data.intervention?.solution?.id || '', Validators.required],
-      probleme: [this.data.intervention?.probleme?.id || '', Validators.required],
-      aeroport: [this.data.intervention?.aeroport?.id || '', Validators.required]
+      equipment: [this.data.intervention?.equipment?.id || '',Validators.nullValidator],
+      solution: [this.data.intervention?.solution?.id || '', Validators.nullValidator],
+      probleme: [this.data.intervention?.probleme?.id || '', Validators.nullValidator]
+      //aeroport: [this.data.intervention?.aeroport?.id || '', Validators.required]
     });
 
     this.loadDependencies();
   }
 
   loadDependencies(): void {
-    this.appUserService.getAllUsersWithRole('TECHNICIEN').subscribe((data: any[]) => {
+    this.appUserService.getAllUsersWithRoleAndAeroport('TECHNICIEN',this.authService.username).subscribe((data: any[]) => {
       this.users = data;
+      console.log("USERS HELP : ",data);
+    });
+    this.appUserService.getAeroport(this.authService.username).subscribe((data: any[]) => {
+     this.aeroport=data;
+      console.log("AEROPORT : ",this.aeroport.id);
     });
 
     this.compagnieService.getAllCompagnies().subscribe((data: any[]) => {
@@ -84,6 +89,7 @@ export class InterventionDialogHelpComponent {
 
     this.comptoireService.getAllComptoires().subscribe((data: any[]) => {
       this.comptoires = data;
+      console.log("HElp : ",data);
     });
 
     this.equipmentService.getAllEquipments().subscribe((data: any[]) => {
@@ -108,7 +114,9 @@ export class InterventionDialogHelpComponent {
   }
 
   saveIntervention(): void {
+    console.log("Help validation : ",this.formIntervention.valid);
     if (this.formIntervention.valid) {
+      //console.log("Help validation : ",this.data)
       const formValue = this.formIntervention.getRawValue();
       const interventionData: Intervention = {
         id: formValue.id,
@@ -122,7 +130,7 @@ export class InterventionDialogHelpComponent {
         equipment: formValue.equipment,
         solution: formValue.solution,
         probleme: formValue.probleme,
-        aeroport: formValue.aeroport
+        aeroport: this.aeroport.id
       };
 
       if (interventionData.id) {

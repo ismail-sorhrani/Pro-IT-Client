@@ -10,6 +10,8 @@ import { Intervention } from '../models/model/model.module';
 import { AuthServiceService } from '../services/auth-service.service';
 import { InterventionDialogHelpComponent } from '../intervention-dialog-help/intervention-dialog-help.component';
 import { enableDebugTools } from '@angular/platform-browser';
+import {InterventionFinComponent} from "../intervention-fin/intervention-fin.component";
+import {AppUserService} from "../services/app-user.service";
 
 @Component({
   selector: 'app-intervention',
@@ -18,27 +20,36 @@ import { enableDebugTools } from '@angular/platform-browser';
 })
 export class InterventionComponent implements OnInit {
   displayedColumns: string[] = ['id', 'status', 'date', 'heureDebut', 'heureFin', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme', 'aeroport', 'action'];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  //@ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('paginatorEncours') paginatorEncours!: MatPaginator;
+  @ViewChild('paginatorFermer') paginatorFermer!: MatPaginator;
   //public dataSource: MatTableDataSource<Intervention>;
   public dataSourceEncours: MatTableDataSource<Intervention>;
   public dataSourceFermer: MatTableDataSource<Intervention>;
   formIntervention!: FormGroup;
   isTechnicien: boolean = false;
+  isAdmin: boolean = false;
+  aeroport!: any ;
+  aeroportId!:number;
   constructor(
     private dialog: MatDialog,
     private interventionService: InterventionService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private snackBar: MatSnackBar,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
+    private appUserService: AppUserService
   ) {
     //this.dataSource = new MatTableDataSource<Intervention>();
     this.dataSourceEncours = new MatTableDataSource<Intervention>();
     this.dataSourceFermer = new MatTableDataSource<Intervention>();
+
   }
 
   ngOnInit(): void {
+
     this.isTechnicien = this.authService.roles.includes('TECHNICIEN');
+    this.isAdmin = this.authService.roles.includes('ADMIN');
     this.fetchInterventions();
     this.formIntervention = this.fb.group({
       id: ['' || null],
@@ -54,18 +65,23 @@ export class InterventionComponent implements OnInit {
       probleme: ['', Validators.required],
       aeroport: ['', Validators.required]
     });
+
   }
 
   fetchInterventions(): void {
     if (this.isTechnicien) {
       this.fetchInterventionsTech();
-    } else {
+    }
+    else if (this.isAdmin) {
+      this.fetchInterventionsHelp();
+    }
+    else {
       this.fetchInterventionsHelp();
     }
   }
 
   fetchInterventionsTech(): void {
-    this.interventionService.getAllInterventions().subscribe({
+    this.interventionService.getAllInterventions(this.authService.username).subscribe({
       next: data => {
         data.forEach(intervention => {
           if (intervention.heureDebut) {
@@ -75,12 +91,21 @@ export class InterventionComponent implements OnInit {
             intervention.heureFin = new Date('1970-01-01T' + intervention.heureFin + 'Z');
           }
         });
+        console.log("daata : ",data);
         //this.dataSource.data = data;
         //this.dataSource.paginator = this.paginator;
-        this.dataSourceEncours.data = data.filter(intervention => intervention.status === 'ENCOURS');
-        this.dataSourceFermer.data = data.filter(intervention => intervention.status === 'FERMER');
-        this.dataSourceEncours.paginator = this.paginator;
-        this.dataSourceFermer.paginator = this.paginator;
+        this.dataSourceEncours.data = data.filter(
+          intervention => intervention.status === 'ENCOURS'
+            //&& intervention.appUser === this.authService.username
+        );
+        this.dataSourceFermer.data = data.filter(
+          intervention => intervention.status === 'FERMER'
+            //&& intervention.appUser === this.authService.username
+        );
+        //this.dataSourceEncours.paginator = this.paginator;
+        //this.dataSourceFermer.paginator = this.paginator;
+        this.dataSourceEncours.paginator = this.paginatorEncours;
+        this.dataSourceFermer.paginator = this.paginatorFermer;
         this.cdr.detectChanges();
       },
       error: err => {
@@ -90,7 +115,8 @@ export class InterventionComponent implements OnInit {
   }
 
   fetchInterventionsHelp(): void {
-    this.interventionService.getAllInterventionsHelp().subscribe({
+
+    this.interventionService.getAllInterventionsHelpId(this.authService.aeroport.id).subscribe({
       next: data => {
         data.forEach(intervention => {
           if (intervention.heureDebut) {
@@ -102,10 +128,20 @@ export class InterventionComponent implements OnInit {
         });
         //this.dataSource.data = data;
         //this.dataSource.paginator = this.paginator;
-        this.dataSourceEncours.data = data.filter(intervention => intervention.status === 'ENCOURS');
-        this.dataSourceFermer.data = data.filter(intervention => intervention.status === 'FERMER');
-        this.dataSourceEncours.paginator = this.paginator;
-        this.dataSourceFermer.paginator = this.paginator;
+        this.dataSourceEncours.data = data.filter(
+          intervention => intervention.status === 'ENCOURS'
+
+
+        );
+
+        this.dataSourceFermer.data = data.filter(
+          intervention => intervention.status === 'FERMER'
+
+        );
+        //this.dataSourceEncours.paginator = this.paginator;
+        //this.dataSourceFermer.paginator = this.paginator;
+        this.dataSourceEncours.paginator = this.paginatorEncours;
+        this.dataSourceFermer.paginator = this.paginatorFermer;
         this.cdr.detectChanges();
       },
       error: err => {
@@ -113,6 +149,8 @@ export class InterventionComponent implements OnInit {
       }
     });
   }
+
+
 
   openDialog(intervention?: any): void {
     if(this.isTechnicien){
@@ -150,15 +188,30 @@ export class InterventionComponent implements OnInit {
     this.openDialog(intervention);
   }
 
-  finishIntervention(intervention: any): void {
+  /*finishIntervention(intervention: any): void {
     if (this.isTechnicien) {
       this.finishInterventionTech(intervention);
     } else {
       this.finishInterventionHelp(intervention);
     }
+  }*/
+  finishIntervention(intervention: any): void {
+    const dialogRef = this.dialog.open(InterventionFinComponent, {
+      data: {
+        title: 'Terminer Intervention',
+        intervention: intervention
+      }
+    });
+    dialogRef.afterClosed().subscribe(result => {
+    if (result) {
+      console.log("result finish : ",result)
+      this.fetchInterventions();
+    }
+  });
   }
 
-  finishInterventionTech(intervention: any): void {
+
+  /*finishInterventionTech(intervention: any): void {
     this.interventionService.endIntervention(intervention).subscribe({
       next: data => {
         this.snackBar.open('Intervention terminée avec succès', 'Fermer', { duration: 3000 });
@@ -180,6 +233,34 @@ export class InterventionComponent implements OnInit {
       error: err => {
         console.log('Error finishing intervention:', err);
         this.snackBar.open('Erreur lors de la terminaison de l\'intervention', 'Fermer', { duration: 3000 });
+      }
+    });
+  }*/
+
+
+  private fetchInterventionsAdmin() {
+    this.interventionService.getAllInterventionsHelp().subscribe({
+      next: data => {
+        data.forEach(intervention => {
+          if (intervention.heureDebut) {
+            intervention.heureDebut = new Date('1970-01-01T' + intervention.heureDebut + 'Z');
+          }
+          if (intervention.heureFin) {
+            intervention.heureFin = new Date('1970-01-01T' + intervention.heureFin + 'Z');
+          }
+        });
+        //this.dataSource.data = data;
+        //this.dataSource.paginator = this.paginator;
+        this.dataSourceEncours.data = data.filter(intervention => intervention.status === 'ENCOURS');
+        this.dataSourceFermer.data = data.filter(intervention => intervention.status === 'FERMER');
+        //this.dataSourceEncours.paginator = this.paginator;
+        //this.dataSourceFermer.paginator = this.paginator;
+        this.dataSourceEncours.paginator = this.paginatorEncours;
+        this.dataSourceFermer.paginator = this.paginatorFermer;
+        this.cdr.detectChanges();
+      },
+      error: err => {
+        console.log('Error fetching interventions:', err);
       }
     });
   }

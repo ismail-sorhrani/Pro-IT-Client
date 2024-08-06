@@ -39,9 +39,21 @@
     <mat-icon matListItemIcon>report_problem</mat-icon>
     <span matListItemTitle> My Interventions</span>
   </a>
+  <a mat-list-item routerLink="/technicien/intervention/historique" *ngIf="isTechnicien">
+    <mat-icon matListItemIcon>history</mat-icon>
+    <span matListItemTitle> Historique</span>
+  </a>
   <a mat-list-item routerLink="/helpdesk/intervention" *ngIf="isHelpdesk">
     <mat-icon matListItemIcon>report_problem</mat-icon>
     <span matListItemTitle> My Interventions</span>
+  </a>
+  <a mat-list-item routerLink="/helpdesk/intervention/historique" *ngIf="isHelpdesk">
+    <mat-icon matListItemIcon>history</mat-icon>
+    <span matListItemTitle> Historique</span>
+  </a>
+  <a mat-list-item routerLink="/helpdesk/intervention/historique" *ngIf="isAdmin">
+    <mat-icon matListItemIcon>history</mat-icon>
+    <span matListItemTitle> Historique</span>
   </a>
 
 

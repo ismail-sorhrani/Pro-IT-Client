@@ -15,6 +15,7 @@ import {EquipmentComponent} from "./equipment/equipment.component";
 import {InterventionComponent} from "./intervention/intervention.component";
 import {ProblemeComponent} from "./probleme/probleme.component";
 import {SolutionComponent} from "./solution/solution.component";
+import {InterventionHistoriqueComponent} from "./intervention-historique/intervention-historique.component";
 
 const routes: Routes = [
   {path : "", redirectTo :"/login" ,pathMatch:"full"},
@@ -36,12 +37,14 @@ const routes: Routes = [
   {path :"technicien", component:TechnicienComponent ,
     canActivate:[AuthenticationGuard]
     ,children :[
-      {path : "intervention", component:InterventionComponent}
+      {path : "intervention", component:InterventionComponent},
+      {path : "intervention/historique", component:InterventionHistoriqueComponent}
     ]},
   {path :"helpdesk", component:HelpdeskComponent ,
     canActivate:[AuthenticationGuard],
     children:[
-      {path : "intervention", component:InterventionComponent}
+      {path : "intervention", component:InterventionComponent},
+      {path : "intervention/historique", component:InterventionHistoriqueComponent}
     ]
     }
 

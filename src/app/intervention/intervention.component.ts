@@ -19,11 +19,10 @@ import {AppUserService} from "../services/app-user.service";
   styleUrls: ['./intervention.component.css']
 })
 export class InterventionComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'status', 'date', 'heureDebut', 'heureFin', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme', 'aeroport', 'action'];
+  displayedColumns: string[] = ['id', 'status', 'date', 'heureDebut','duration', 'heureFin', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme', 'aeroport', 'action'];
   //@ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('paginatorEncours') paginatorEncours!: MatPaginator;
   @ViewChild('paginatorFermer') paginatorFermer!: MatPaginator;
-  //public dataSource: MatTableDataSource<Intervention>;
   public dataSourceEncours: MatTableDataSource<Intervention>;
   public dataSourceFermer: MatTableDataSource<Intervention>;
   formIntervention!: FormGroup;
@@ -47,7 +46,6 @@ export class InterventionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
     this.isTechnicien = this.authService.roles.includes('TECHNICIEN');
     this.isAdmin = this.authService.roles.includes('ADMIN');
     this.fetchInterventions();
@@ -83,6 +81,9 @@ export class InterventionComponent implements OnInit {
   fetchInterventionsTech(): void {
     this.interventionService.getAllInterventions(this.authService.username).subscribe({
       next: data => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour ne comparer que la date
+
         data.forEach(intervention => {
           if (intervention.heureDebut) {
             intervention.heureDebut = new Date('1970-01-01T' + intervention.heureDebut + 'Z');
@@ -90,20 +91,25 @@ export class InterventionComponent implements OnInit {
           if (intervention.heureFin) {
             intervention.heureFin = new Date('1970-01-01T' + intervention.heureFin + 'Z');
           }
+          if (intervention.status === 'FERMER' && intervention.heureDebut && intervention.heureFin) {
+            const duration = new Date(intervention.heureFin.getTime() - intervention.heureDebut.getTime());
+            intervention.duration = duration.getUTCHours() + 'h ' + duration.getUTCMinutes() + 'm';
+          } else {
+            intervention.duration = 'N/A';
+          }
         });
-        console.log("daata : ",data);
-        //this.dataSource.data = data;
-        //this.dataSource.paginator = this.paginator;
-        this.dataSourceEncours.data = data.filter(
-          intervention => intervention.status === 'ENCOURS'
-            //&& intervention.appUser === this.authService.username
+
+        // Filtrer par statut et par date égale à la date d'aujourd'hui
+        this.dataSourceEncours.data = data.filter(intervention =>
+          intervention.status === 'ENCOURS' &&
+          new Date(intervention.date).setHours(0, 0, 0, 0) === today.getTime()
         );
-        this.dataSourceFermer.data = data.filter(
-          intervention => intervention.status === 'FERMER'
-            //&& intervention.appUser === this.authService.username
+
+        this.dataSourceFermer.data = data.filter(intervention =>
+          intervention.status === 'FERMER' &&
+          new Date(intervention.date).setHours(0, 0, 0, 0) === today.getTime()
         );
-        //this.dataSourceEncours.paginator = this.paginator;
-        //this.dataSourceFermer.paginator = this.paginator;
+
         this.dataSourceEncours.paginator = this.paginatorEncours;
         this.dataSourceFermer.paginator = this.paginatorFermer;
         this.cdr.detectChanges();
@@ -114,10 +120,13 @@ export class InterventionComponent implements OnInit {
     });
   }
 
+
   fetchInterventionsHelp(): void {
 
-    this.interventionService.getAllInterventionsHelpId(this.authService.aeroport.id).subscribe({
+    this.interventionService.getAllInterventionsHelp().subscribe({
       next: data => {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Réinitialiser l'heure pour ne comparer que la date
         data.forEach(intervention => {
           if (intervention.heureDebut) {
             intervention.heureDebut = new Date('1970-01-01T' + intervention.heureDebut + 'Z');
@@ -125,21 +134,26 @@ export class InterventionComponent implements OnInit {
           if (intervention.heureFin) {
             intervention.heureFin = new Date('1970-01-01T' + intervention.heureFin + 'Z');
           }
+          if (intervention.status === 'FERMER' && intervention.heureDebut && intervention.heureFin) {
+            const duration = new Date(intervention.heureFin.getTime() - intervention.heureDebut.getTime());
+            intervention.duration = duration.getUTCHours() + 'h ' + duration.getUTCMinutes() + 'm';
+          } else {
+            intervention.duration = 'N/A';
+          }
         });
         //this.dataSource.data = data;
         //this.dataSource.paginator = this.paginator;
         this.dataSourceEncours.data = data.filter(
-          intervention => intervention.status === 'ENCOURS'
-
+          intervention => intervention.status === 'ENCOURS'&&
+            new Date(intervention.date).setHours(0, 0, 0, 0) === today.getTime()
 
         );
 
         this.dataSourceFermer.data = data.filter(
-          intervention => intervention.status === 'FERMER'
+          intervention => intervention.status === 'FERMER'&&
+            new Date(intervention.date).setHours(0, 0, 0, 0) === today.getTime()
 
         );
-        //this.dataSourceEncours.paginator = this.paginator;
-        //this.dataSourceFermer.paginator = this.paginator;
         this.dataSourceEncours.paginator = this.paginatorEncours;
         this.dataSourceFermer.paginator = this.paginatorFermer;
         this.cdr.detectChanges();
@@ -188,13 +202,6 @@ export class InterventionComponent implements OnInit {
     this.openDialog(intervention);
   }
 
-  /*finishIntervention(intervention: any): void {
-    if (this.isTechnicien) {
-      this.finishInterventionTech(intervention);
-    } else {
-      this.finishInterventionHelp(intervention);
-    }
-  }*/
   finishIntervention(intervention: any): void {
     const dialogRef = this.dialog.open(InterventionFinComponent, {
       data: {
@@ -209,33 +216,6 @@ export class InterventionComponent implements OnInit {
     }
   });
   }
-
-
-  /*finishInterventionTech(intervention: any): void {
-    this.interventionService.endIntervention(intervention).subscribe({
-      next: data => {
-        this.snackBar.open('Intervention terminée avec succès', 'Fermer', { duration: 3000 });
-        this.fetchInterventionsTech();
-      },
-      error: err => {
-        console.log('Error finishing intervention:', err);
-        this.snackBar.open('Erreur lors de la terminaison de l\'intervention', 'Fermer', { duration: 3000 });
-      }
-    });
-  }
-
-  finishInterventionHelp(intervention: any): void {
-    this.interventionService.endInterventionHelp(intervention).subscribe({
-      next: data => {
-        this.snackBar.open('Intervention terminée avec succès', 'Fermer', { duration: 3000 });
-        this.fetchInterventionsHelp();
-      },
-      error: err => {
-        console.log('Error finishing intervention:', err);
-        this.snackBar.open('Erreur lors de la terminaison de l\'intervention', 'Fermer', { duration: 3000 });
-      }
-    });
-  }*/
 
 
   private fetchInterventionsAdmin() {

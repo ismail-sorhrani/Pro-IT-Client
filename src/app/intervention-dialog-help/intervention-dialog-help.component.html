@@ -28,14 +28,14 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <!--<mat-form-field class="custom-form-field">
+    <mat-form-field class="custom-form-field">
       <mat-label>Aéroport</mat-label>
       <mat-select formControlName="aeroport">
         <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport.id">
           {{ aeroport.aeroportName }}
         </mat-option>
       </mat-select>
-    </mat-form-field>-->
+    </mat-form-field>
     <div *ngIf="data.intervention?.id && data.intervention?.status === 'FERMER'">
     <mat-form-field class="custom-form-field">
       <mat-label>Equipment</mat-label>

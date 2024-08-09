@@ -18,10 +18,10 @@ export class AppUserService {
   getAllUsersWithRole(role: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/role/${role}`);
   }
-  getAllUsersWithRoleAndAeroport(role: string, username: string): Observable<any[]> {
+  getAllUsersWithRoleAndAeroport(role: string, aeroport: string): Observable<any[]> {
     const params = new HttpParams()
       .set('role', role)
-      .set('username', username);
+      .set('aeroport', aeroport);
 
     return this.http.get<any[]>(`${this.baseUrl}/role/aeroport`, { params });
   }

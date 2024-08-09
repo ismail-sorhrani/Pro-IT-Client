@@ -16,6 +16,9 @@ import {InterventionComponent} from "./intervention/intervention.component";
 import {ProblemeComponent} from "./probleme/probleme.component";
 import {SolutionComponent} from "./solution/solution.component";
 import {InterventionHistoriqueComponent} from "./intervention-historique/intervention-historique.component";
+import {
+  InterventionHistoriqueAeroportComponent
+} from "./intervention-historique-aeroport/intervention-historique-aeroport.component";
 
 const routes: Routes = [
   {path : "", redirectTo :"/login" ,pathMatch:"full"},
@@ -38,7 +41,8 @@ const routes: Routes = [
     canActivate:[AuthenticationGuard]
     ,children :[
       {path : "intervention", component:InterventionComponent},
-      {path : "intervention/historique", component:InterventionHistoriqueComponent}
+      {path : "intervention/historique", component:InterventionHistoriqueComponent},
+      {path :"intervention/historique/aeroport",component:InterventionHistoriqueAeroportComponent}
     ]},
   {path :"helpdesk", component:HelpdeskComponent ,
     canActivate:[AuthenticationGuard],

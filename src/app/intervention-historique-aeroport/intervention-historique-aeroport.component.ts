@@ -2,22 +2,19 @@ import {ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatTableDataSource} from "@angular/material/table";
 import {Intervention} from "../models/model/model.module";
-import {FormBuilder, FormGroup} from "@angular/forms";
-import {MatDialog} from "@angular/material/dialog";
 import {InterventionService} from "../services/intervention.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthServiceService} from "../services/auth-service.service";
 
 @Component({
-  selector: 'app-intervention-historique',
-  templateUrl: './intervention-historique.component.html',
-  styleUrl: './intervention-historique.component.css'
+  selector: 'app-intervention-historique-aeroport',
+  templateUrl: './intervention-historique-aeroport.component.html',
+  styleUrl: './intervention-historique-aeroport.component.css'
 })
-export class InterventionHistoriqueComponent implements OnInit{
+export class InterventionHistoriqueAeroportComponent implements OnInit{
   displayedColumns: string[] = ['id', 'status', 'date', 'heureDebut', 'heureFin','duration', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme', 'aeroport'];
 
   @ViewChild('paginatorFermer') paginatorFermer!: MatPaginator;
-
   public dataSourceFermer: MatTableDataSource<Intervention>;
   isTechnicien: boolean = false;
   isAdmin: boolean = false;
@@ -28,7 +25,6 @@ export class InterventionHistoriqueComponent implements OnInit{
     private snackBar: MatSnackBar,
     private authService: AuthServiceService
   ) {
-
     this.dataSourceFermer = new MatTableDataSource<Intervention>();
   }
   ngOnInit(): void {
@@ -46,7 +42,7 @@ export class InterventionHistoriqueComponent implements OnInit{
     }
   }
   fetchInterventionsTech(): void {
-    this.interventionService.getAllInterventions(this.authService.username).subscribe({
+    this.interventionService.getAllInterventionsByAeroport(this.authService.username).subscribe({
       next: data => {
         data.forEach(intervention => {
           if (intervention.heureDebut) {
@@ -66,9 +62,7 @@ export class InterventionHistoriqueComponent implements OnInit{
 
         this.dataSourceFermer.data = data.filter(
           intervention => intervention.status === 'FERMER'
-          //&& intervention.appUser === this.authService.username
         );
-
         this.dataSourceFermer.paginator = this.paginatorFermer;
         this.cdr.detectChanges();
       },

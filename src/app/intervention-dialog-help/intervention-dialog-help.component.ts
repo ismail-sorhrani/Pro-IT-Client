@@ -66,18 +66,24 @@ export class InterventionDialogHelpComponent {
       comptoire: [this.data.intervention?.comptoire?.id || '', Validators.required],
       equipment: [this.data.intervention?.equipment?.id || '',Validators.nullValidator],
       solution: [this.data.intervention?.solution?.id || '', Validators.nullValidator],
-      probleme: [this.data.intervention?.probleme?.id || '', Validators.nullValidator]
-      //aeroport: [this.data.intervention?.aeroport?.id || '', Validators.required]
+      probleme: [this.data.intervention?.probleme?.id || '', Validators.nullValidator],
+      aeroport: [this.data.intervention?.aeroport?.id || '', Validators.required]
     });
 
     this.loadDependencies();
+    this.formIntervention.get('aeroport')?.valueChanges.subscribe((selectedAeroportId) => {
+      if (selectedAeroportId) {
+        this.loadUsers(selectedAeroportId);
+      }
+    });
+    if (this.data.intervention?.aeroport?.id) {
+      this.loadUsers(this.data.intervention.aeroport.id);
+    }
   }
 
+
   loadDependencies(): void {
-    this.appUserService.getAllUsersWithRoleAndAeroport('TECHNICIEN',this.authService.username).subscribe((data: any[]) => {
-      this.users = data;
-      console.log("USERS HELP : ",data);
-    });
+
     this.appUserService.getAeroport(this.authService.username).subscribe((data: any[]) => {
      this.aeroport=data;
       console.log("AEROPORT : ",this.aeroport.id);
@@ -112,6 +118,24 @@ export class InterventionDialogHelpComponent {
   onNoClick(): void {
     this.dialogRef.close();
   }
+  /*loadUsers():void{
+    this.appUserService.getAllUsersWithRoleAndAeroport('TECHNICIEN',this.aeroport.aeroportName).subscribe((data: any[]) => {
+    this.users = data;
+    console.log("USERS HELP : ",data);
+  });
+  }*/
+  loadUsers(aeroportId: number): void {
+    console.log("selectedAeroport",aeroportId);
+    const selectedAeroport = this.aeroports.find(aeroport => aeroport.id === aeroportId);
+
+    if (selectedAeroport) {
+      this.appUserService.getAllUsersWithRoleAndAeroport('TECHNICIEN', selectedAeroport.aeroportName).subscribe((data: any[]) => {
+        this.users = data;
+        console.log("USERS LOADED FOR AEROPORT:", selectedAeroport.aeroportName, data);
+      });
+    }
+  }
+
 
   saveIntervention(): void {
     console.log("Help validation : ",this.formIntervention.valid);
@@ -130,7 +154,8 @@ export class InterventionDialogHelpComponent {
         equipment: formValue.equipment,
         solution: formValue.solution,
         probleme: formValue.probleme,
-        aeroport: this.aeroport.id
+        aeroport: formValue.aeroport,
+        duration:0
       };
 
       if (interventionData.id) {

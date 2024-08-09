@@ -23,7 +23,6 @@ import { ComptoireComponent } from './comptoire/comptoire.component';
 import { AeroportComponent } from './aeroport/aeroport.component';
 import { ReportingComponent } from './reporting/reporting.component';
 import { CustomSidebarComponent } from './custom-sidebar/custom-sidebar.component';
-
 import { ZoneDialogComponent } from './zone-dialog/zone-dialog.component';
 import {MatDialogActions, MatDialogClose, MatDialogContent} from "@angular/material/dialog";
 import {MatInputModule, MatLabel} from "@angular/material/input";
@@ -51,6 +50,10 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import { FinishInterventionDialogComponent } from './finish-intervention-dialog/finish-intervention-dialog.component';
 import { InterventionFinComponent } from './intervention-fin/intervention-fin.component';
 import { InterventionHistoriqueComponent } from './intervention-historique/intervention-historique.component';
+import { InterventionsByEquipmentChartComponent } from './interventions-by-equipment-chart/interventions-by-equipment-chart.component';
+import {BaseChartDirective} from "ng2-charts";
+import { InterventionsByProblemeChartComponent } from './interventions-by-probleme-chart/interventions-by-probleme-chart.component';
+import { InterventionHistoriqueAeroportComponent } from './intervention-historique-aeroport/intervention-historique-aeroport.component';
 
 @NgModule({
   declarations: [
@@ -81,38 +84,42 @@ import { InterventionHistoriqueComponent } from './intervention-historique/inter
     InterventionDialogHelpComponent,
     FinishInterventionDialogComponent,
     InterventionFinComponent,
-    InterventionHistoriqueComponent
+    InterventionHistoriqueComponent,
+    InterventionsByEquipmentChartComponent,
+    InterventionsByProblemeChartComponent,
+    InterventionHistoriqueAeroportComponent
   ],
-  imports: [
-    BrowserModule,
-    BrowserAnimationsModule,
-    AppRoutingModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
-    MatFormFieldModule,
-    MatLabel,
-    MatMenuModule,
-    MatMenuTrigger,
-    MatSidenavModule,
-    MatListModule,
-    MatDialogContent,
-    MatDialogActions,
-    MatDialogClose,
-    MatInputModule,
-    MatSelectModule,
-    MatOptionModule,
-    MatPaginatorModule,
-    MatCardModule,
-    MatCardHeader,
-    MatCardActions,
-    MatCardContent,
-    MatTableModule,
-    MatTabGroup,
-    MatTab
-  ],
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        AppRoutingModule,
+        ReactiveFormsModule,
+        HttpClientModule,
+        MatToolbarModule,
+        MatButtonModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatLabel,
+        MatMenuModule,
+        MatMenuTrigger,
+        MatSidenavModule,
+        MatListModule,
+        MatDialogContent,
+        MatDialogActions,
+        MatDialogClose,
+        MatInputModule,
+        MatSelectModule,
+        MatOptionModule,
+        MatPaginatorModule,
+        MatCardModule,
+        MatCardHeader,
+        MatCardActions,
+        MatCardContent,
+        MatTableModule,
+        MatTabGroup,
+        MatTab,
+        BaseChartDirective
+    ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AppHttpInterceptor, multi: true },
     provideAnimationsAsync()

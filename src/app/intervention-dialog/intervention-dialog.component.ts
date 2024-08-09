@@ -123,7 +123,8 @@ export class InterventionDialogComponent implements OnInit {
         equipment: formValue.equipment,
         solution: formValue.solution,
         probleme: formValue.probleme,
-        aeroport: this.aeroport.id
+        aeroport: this.aeroport.id,
+        duration:0
       };
 
       if (interventionData.id) {

@@ -50,6 +50,7 @@ export interface Intervention {
   solution: number;
   probleme: number;
   aeroport: number;
+  duration:any;
 }
 export interface appUser{
   id:number,

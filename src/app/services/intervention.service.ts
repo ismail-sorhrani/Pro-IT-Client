@@ -3,6 +3,7 @@ import {Intervention} from "../models/model/model.module";
 import {Observable} from "rxjs";
 import {HttpClient} from "@angular/common/http";
 import {AuthServiceService} from "./auth-service.service";
+import {Interventiion} from "../models/model/intervention.model";
 
 @Injectable({
   providedIn: 'root'
@@ -23,8 +24,19 @@ export class InterventionService {
       }
       );
   }
+  getAllInterventionsByAeroport(aeroport: string): Observable<Intervention[]> {
+    return this.http.get<Intervention[]>(`${this.baseUrl1}/interventions/aeroport`,
+      {
+        params: { aeroport }
+      }
+    );
+  }
   getAllInterventiions(): Observable<Intervention[]> {
-    return this.http.get<Intervention[]>(`${this.baseUrl1}/interventions`
+    return this.http.get<Intervention[]>(`${this.baseUrl3}/interventions`
+    );
+  }
+  getAllInterventiiions(): Observable<Interventiion[]> {
+    return this.http.get<Interventiion[]>(`${this.baseUrl3}/interventions`
     );
   }
   getAllInterventionsHelp(): Observable<Intervention[]> {
@@ -50,7 +62,8 @@ export class InterventionService {
       equipment: intervention.equipment,
       solution: intervention.solution,
       probleme: intervention.probleme,
-      aeroport: intervention.aeroport
+      aeroport: intervention.aeroport,
+      duration:0
     };
     return this.http.post<Intervention>(`${this.baseUrl1}/intervention`, interventionData);
   }
@@ -68,7 +81,8 @@ export class InterventionService {
       equipment: intervention.equipment,
       solution: intervention.solution,
       probleme: intervention.probleme,
-      aeroport: intervention.aeroport
+      aeroport: intervention.aeroport,
+      duration:0
     };
     console.log("service ", interventionData);
     return this.http.post<Intervention>(`${this.baseUrl2}/intervention`, interventionData);
@@ -87,7 +101,8 @@ export class InterventionService {
       equipment: intervention.equipment,
       solution: intervention.solution,
       probleme: intervention.probleme,
-      aeroport: intervention.aeroport
+      aeroport: intervention.aeroport,
+      duration:0
     };
     return this.http.post<Intervention>(`${this.baseUrl1}/intervention/update`, interventionData);
   }
@@ -105,7 +120,8 @@ export class InterventionService {
       equipment: intervention.equipment,
       solution: intervention.solution,
       probleme: intervention.probleme,
-      aeroport: intervention.aeroport
+      aeroport: intervention.aeroport,
+      duration:0
     };
     return this.http.post<Intervention>(`${this.baseUrl2}/intervention/update`, interventionData);
   }
@@ -124,7 +140,8 @@ export class InterventionService {
       equipment: parseInt(intervention.equipment.toString(), 10), // Ensure equipment is a number
       solution: parseInt(intervention.solution.toString(), 10), // Ensure solution is a number
       probleme: parseInt(intervention.probleme.toString(), 10), // Ensure probleme is a number
-      aeroport: parseInt(intervention.aeroport.toString(), 10) // Ensure aeroport is a number
+      aeroport: parseInt(intervention.aeroport.toString(), 10), // Ensure aeroport is a number
+      duration:0
     };
 
     console.log('Sending intervention data to end:', interventionData);
@@ -145,7 +162,8 @@ export class InterventionService {
       equipment: parseInt(intervention.equipment.toString(), 10), // Ensure equipment is a number
       solution: parseInt(intervention.solution.toString(), 10), // Ensure solution is a number
       probleme: parseInt(intervention.probleme.toString(), 10), // Ensure probleme is a number
-      aeroport: parseInt(intervention.aeroport.toString(), 10) // Ensure aeroport is a number
+      aeroport: parseInt(intervention.aeroport.toString(), 10), // Ensure aeroport is a number
+      duration:0
     };
 
     console.log('Sending intervention data to end:', interventionData);
@@ -154,5 +172,8 @@ export class InterventionService {
   }
 
 
-
+  getInterventionsByProblemType() {
+    return this.http.get<any>(`${this.baseUrl3}/interventions/by-problem-type`
+    );
+  }
 }

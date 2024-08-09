@@ -104,7 +104,8 @@ export class InterventionFinComponent {
         equipment: formValue.equipment,
         solution: formValue.solution,
         probleme: formValue.probleme,
-        aeroport: this.data.intervention.aeroport
+        aeroport: this.data.intervention.aeroport,
+        duration:0
       };
 
       if(this.isTechnicien){

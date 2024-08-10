@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProductsComponent } from './products/products.component';
 import { LoginComponent } from './login/login.component';
-import { ReactiveFormsModule} from "@angular/forms";
+import { FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import { AdminComponent } from './admin/admin.component';
 import { TechnicienComponent } from './technicien/technicien.component';
@@ -54,6 +54,8 @@ import { InterventionsByEquipmentChartComponent } from './interventions-by-equip
 import {BaseChartDirective} from "ng2-charts";
 import { InterventionsByProblemeChartComponent } from './interventions-by-probleme-chart/interventions-by-probleme-chart.component';
 import { InterventionHistoriqueAeroportComponent } from './intervention-historique-aeroport/intervention-historique-aeroport.component';
+import { InterventionTbfComponent } from './intervention-tbf/intervention-tbf.component';
+import { InterventionByCompagnieComponent } from './intervention-by-compagnie/intervention-by-compagnie.component';
 
 @NgModule({
   declarations: [
@@ -87,9 +89,12 @@ import { InterventionHistoriqueAeroportComponent } from './intervention-historiq
     InterventionHistoriqueComponent,
     InterventionsByEquipmentChartComponent,
     InterventionsByProblemeChartComponent,
-    InterventionHistoriqueAeroportComponent
+    InterventionHistoriqueAeroportComponent,
+    InterventionTbfComponent,
+    InterventionByCompagnieComponent
   ],
     imports: [
+        FormsModule,
         BrowserModule,
         BrowserAnimationsModule,
         AppRoutingModule,

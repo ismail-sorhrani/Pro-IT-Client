@@ -19,6 +19,7 @@ import {InterventionHistoriqueComponent} from "./intervention-historique/interve
 import {
   InterventionHistoriqueAeroportComponent
 } from "./intervention-historique-aeroport/intervention-historique-aeroport.component";
+import {UsersComponent} from "./users/users.component";
 
 const routes: Routes = [
   {path : "", redirectTo :"/login" ,pathMatch:"full"},
@@ -34,7 +35,8 @@ const routes: Routes = [
       {path : "reporting", component: ReportingComponent},
       {path : "zone", component: ZoneComponent},
       {path : "aeroport", component: AeroportComponent},
-      {path : "comptoire", component: ComptoireComponent}
+      {path : "comptoire", component: ComptoireComponent},
+      {path: "users",component: UsersComponent}
 
     ]},
   {path :"technicien", component:TechnicienComponent ,

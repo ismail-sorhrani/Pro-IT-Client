@@ -56,6 +56,8 @@ import { InterventionsByProblemeChartComponent } from './interventions-by-proble
 import { InterventionHistoriqueAeroportComponent } from './intervention-historique-aeroport/intervention-historique-aeroport.component';
 import { InterventionTbfComponent } from './intervention-tbf/intervention-tbf.component';
 import { InterventionByCompagnieComponent } from './intervention-by-compagnie/intervention-by-compagnie.component';
+import { UsersComponent } from './users/users.component';
+import { UserDialogComponent } from './user-dialog/user-dialog.component';
 
 @NgModule({
   declarations: [
@@ -91,7 +93,9 @@ import { InterventionByCompagnieComponent } from './intervention-by-compagnie/in
     InterventionsByProblemeChartComponent,
     InterventionHistoriqueAeroportComponent,
     InterventionTbfComponent,
-    InterventionByCompagnieComponent
+    InterventionByCompagnieComponent,
+    UsersComponent,
+    UserDialogComponent
   ],
     imports: [
         FormsModule,

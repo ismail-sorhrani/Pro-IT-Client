@@ -2,6 +2,7 @@ import {HttpClient, HttpParams} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { appUser } from '../models/model/model.module';
 import { Observable } from 'rxjs';
+import {ɵFormGroupValue, ɵTypedOrUntyped} from "@angular/forms";
 
 @Injectable({
   providedIn: 'root'
@@ -29,4 +30,15 @@ export class AppUserService {
     return this.http.get<any[]>(`${this.baseUrl}/aeroport/${username}`);
   }
 
+  deleteUser(id:number) {
+
+  }
+
+  updateUser(value: ɵTypedOrUntyped<any, ɵFormGroupValue<any>, any>) {
+
+  }
+
+  addUser(value: ɵTypedOrUntyped<any, ɵFormGroupValue<any>, any>) {
+
+  }
 }

@@ -7,6 +7,10 @@
     <mat-icon fontIcon="pin_drop" matListItemIcon >menu</mat-icon>
     <span style="color: blue" matListItemTitle>Zones</span>
   </a>
+  <a mat-list-item routerLink="/admin/users"  *ngIf="isAdmin">
+    <mat-icon fontIcon="pin_drop" matListItemIcon >menu</mat-icon>
+    <span style="color: blue" matListItemTitle>Users</span>
+  </a>
   <a mat-list-item routerLink="/admin/aeroport"  *ngIf="isAdmin">
     <mat-icon fontIcon="flight_takeoff" matListItemIcon></mat-icon>
     <span matListItemTitle>Aeroport</span>

@@ -1,3 +1,5 @@
+import {Time} from "@angular/common";
+
 export interface Role {
   id: number;
   roleName: string;
@@ -54,8 +56,8 @@ export interface Interventiion {
   id: number;
   status: string;
   date: string;
-  heureDebut: string;
-  heureFin: string;
+  heureDebut: Date;
+  heureFin: Date;
   compagnie: Compagnie;
   appUser: AppUser;
   comptoire: Comptoire;
@@ -63,4 +65,5 @@ export interface Interventiion {
   solution: Solution;
   probleme: Probleme;
   aeroport: Aeroport;
+  duration:any;
 }

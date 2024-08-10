@@ -23,6 +23,13 @@ export class InterventionService {
       }
       );
   }
+  getAllInterventionsFilter(username: string): Observable<Interventiion[]> {
+    return this.http.get<Interventiion[]>(`${this.baseUrl1}/interventions/username`,
+      {
+        params: { username }
+      }
+    );
+  }
   getAllInterventionsByAeroport(aeroport: string): Observable<Intervention[]> {
     return this.http.get<Intervention[]>(`${this.baseUrl1}/interventions/aeroport`,
       {
@@ -45,12 +52,15 @@ export class InterventionService {
   getAllInterventionsHelp(): Observable<Intervention[]> {
     return this.http.get<Intervention[]>(`${this.baseUrl2}/interventions`);
   }
+  getAllInterventionsHelpFiltre(): Observable<Interventiion[]> {
+    return this.http.get<Interventiion[]>(`${this.baseUrl2}/interventions`);
+  }
   getAllInterventionsHelpId(id: number): Observable<Intervention[]> {
     console.log("bad , id ",id);
     return this.http.get<Intervention[]>(`${this.baseUrl2}/interventions/id/${id}`);
   }
 
-  
+
   getTBFByEquipmentAndCompany(equipmentId: number, month: number, year: number): Observable<any> {
     return this.http.get(`http://localhost:8082/admin/tbf/${equipmentId}/${month}/${year}`);
   }

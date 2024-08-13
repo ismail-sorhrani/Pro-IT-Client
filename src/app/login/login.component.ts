@@ -11,6 +11,7 @@ import {Router} from "@angular/router";
 export class LoginComponent implements OnInit{
   formLogin! :FormGroup;
   roles!:any;
+  visibility:boolean=false;
   constructor(private fb:FormBuilder,private authService:AuthServiceService,private router:Router) {
   }
   ngOnInit() {
@@ -23,8 +24,6 @@ export class LoginComponent implements OnInit{
   submitLogin() {
     let username=this.formLogin.value.username;
     let password=this.formLogin.value.password;
-    console.log("je suis");
-
     this.authService.login(username,password).subscribe({
       next:data => {
         this.authService.loadProfile(data);
@@ -42,6 +41,7 @@ export class LoginComponent implements OnInit{
       },
       error:err => {
         console.log(err);
+        this.visibility=true;
       }
 
     });

@@ -61,4 +61,8 @@ export interface DecodedToken {
   roles: string[];
   sub: string;
 }
+export interface AppRole{
+  id:number,
+  roleName:string
+}
 

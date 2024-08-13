@@ -1,6 +1,6 @@
 import {HttpClient, HttpParams} from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { appUser } from '../models/model/model.module';
+import {AppRole, appUser} from '../models/model/model.module';
 import { Observable } from 'rxjs';
 import {ɵFormGroupValue, ɵTypedOrUntyped} from "@angular/forms";
 
@@ -14,7 +14,9 @@ export class AppUserService {
     return this.http.get<Array<appUser>>("http://localhost:8082/users");
 
   }
-
+  getAllRoles():Observable<Array<AppRole>>{
+    return this.http.get<Array<AppRole>>("http://localhost:8082/role");
+  }
 
   getAllUsersWithRole(role: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.baseUrl}/role/${role}`);
@@ -38,7 +40,9 @@ export class AppUserService {
 
   }
 
-  addUser(value: ɵTypedOrUntyped<any, ɵFormGroupValue<any>, any>) {
 
+  addUser(user: any): Observable<any> {
+    return this.http.post(`${this.baseUrl}`, user);
   }
+
 }

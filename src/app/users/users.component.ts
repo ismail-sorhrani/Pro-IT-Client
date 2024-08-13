@@ -46,6 +46,7 @@ export class UsersComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.fetchUsers();
+        console.log("fermer");
       }
     });
   }

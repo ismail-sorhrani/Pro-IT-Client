@@ -1,0 +1,40 @@
+<!-- tbfdashboard.component.html -->
+<mat-card class="tbf-card">
+    <mat-card-title>TBF Calculation</mat-card-title>
+    <mat-card-content>
+      <form (ngSubmit)="onSubmit()" #tbfForm="ngForm">
+        <mat-grid-list cols="1" rowHeight="auto" gutterSize="16px">
+          <mat-grid-tile>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Equipment</mat-label>
+              <mat-select [(ngModel)]="selectedEquipment" name="equipment" required>
+                <mat-option *ngFor="let equipment of equipments" [value]="equipment.id">
+                  {{ equipment.equipmentName }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Month</mat-label>
+              <mat-select [(ngModel)]="selectedMonth" name="month" required>
+                <mat-option *ngFor="let month of months" [value]="month.value">
+                  {{ month.name }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </mat-grid-tile>
+  
+          <mat-grid-tile>
+            <button mat-raised-button color="primary" class="full-width" type="submit">Calculate TBF</button>
+          </mat-grid-tile>
+        </mat-grid-list>
+      </form>
+    </mat-card-content>
+  </mat-card>
+  
+  <div class="chart-container">
+    <canvas id="tbfChart"></canvas>
+  </div>
+  

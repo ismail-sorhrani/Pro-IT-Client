@@ -45,10 +45,20 @@ export class InterventionService {
     return this.http.get<Interventiion[]>(`${this.baseUrl3}/interventions`
     );
   }
-  getAllInterventionsss(): Observable<Interventiion[]> {
-    return this.http.get<Interventiion[]>(`${this.baseUrl3}/interventions`
-    );
+
+
+  getTBF(equipmentId: number, month: number) {
+    return this.http.get<Map<string, number>>(`${this.baseUrl3}/TBF?equipmentId=${equipmentId}&month=${month}`);
   }
+
+
+  getInterventionPercentages(comptoireId: number, month: number, year: number): Observable<any> {
+    return this.http.get<any>(`${this.baseUrl3}/percentages?comptoireId=${comptoireId}&month=${month}&year=${year}`);
+  }
+
+
+
+  
   getAllInterventionsHelp(): Observable<Intervention[]> {
     return this.http.get<Intervention[]>(`${this.baseUrl2}/interventions`);
   }

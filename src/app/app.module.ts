@@ -54,10 +54,10 @@ import { InterventionsByEquipmentChartComponent } from './interventions-by-equip
 import {BaseChartDirective} from "ng2-charts";
 import { InterventionsByProblemeChartComponent } from './interventions-by-probleme-chart/interventions-by-probleme-chart.component';
 import { InterventionHistoriqueAeroportComponent } from './intervention-historique-aeroport/intervention-historique-aeroport.component';
-import { InterventionTbfComponent } from './intervention-tbf/intervention-tbf.component';
-import { InterventionByCompagnieComponent } from './intervention-by-compagnie/intervention-by-compagnie.component';
 import { UsersComponent } from './users/users.component';
 import { UserDialogComponent } from './user-dialog/user-dialog.component';
+import { TBFDashboardComponent } from './tbfdashboard/tbfdashboard.component';
+import { InterventionByComptoireComponent } from './intervention-by-comptoire/intervention-by-comptoire.component';
 
 @NgModule({
   declarations: [
@@ -92,10 +92,10 @@ import { UserDialogComponent } from './user-dialog/user-dialog.component';
     InterventionsByEquipmentChartComponent,
     InterventionsByProblemeChartComponent,
     InterventionHistoriqueAeroportComponent,
-    InterventionTbfComponent,
-    InterventionByCompagnieComponent,
     UsersComponent,
-    UserDialogComponent
+    UserDialogComponent,
+    TBFDashboardComponent,
+    InterventionByComptoireComponent
   ],
     imports: [
         FormsModule,

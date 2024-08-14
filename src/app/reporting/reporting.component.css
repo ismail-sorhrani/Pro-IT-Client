@@ -30,3 +30,13 @@ mat-card-actions {
 button {
   margin-right: 8px;
 }
+
+/* Add spacing between charts */
+.chart-wrapper {
+  margin-bottom: 20px; /* Adjust this value to increase or decrease the space between graphs */
+}
+
+/* Optional: Remove the margin for the last chart */
+.chart-wrapper:last-child {
+  margin-bottom: 0;
+}

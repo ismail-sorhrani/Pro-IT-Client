@@ -9,8 +9,11 @@ import { SolutionService } from '../services/solution.service';
 import { ProblemeService } from '../services/probleme.service';
 import { AeroportService } from '../services/aeroport.service';
 import { AuthServiceService } from '../services/auth-service.service';
-import { Intervention } from '../models/model/model.module';
+import {Intervention, Projet, Zone} from '../models/model/model.module';
 import { AppUserService } from '../services/app-user.service';
+import {ProjetService} from "../services/projet.service";
+import {ZoneService} from "../services/zone.service";
+import {MatTableDataSource} from "@angular/material/table";
 
 @Component({
   selector: 'app-intervention-dialog-help',
@@ -42,7 +45,9 @@ export class InterventionDialogHelpComponent {
     private problemeService: ProblemeService,
     private aeroportService: AeroportService,
     private authService: AuthServiceService,
-    private appUserService: AppUserService
+    private appUserService: AppUserService,
+    private projetService:ProjetService,
+    private zoneService:ZoneService
   ) {
     // Set minDate to current date
     this.minDate = new Date();
@@ -67,7 +72,9 @@ export class InterventionDialogHelpComponent {
       equipment: [this.data.intervention?.equipment?.id || '',Validators.nullValidator],
       solution: [this.data.intervention?.solution?.id || '', Validators.nullValidator],
       probleme: [this.data.intervention?.probleme?.id || '', Validators.nullValidator],
-      aeroport: [this.data.intervention?.aeroport?.id || '', Validators.required]
+      aeroport: [this.data.intervention?.aeroport?.id || '', Validators.required],
+      projet: [this.data.intervention?.projet?.id || '', Validators.required],
+      zone:['',Validators.nullValidator]
     });
 
     this.loadDependencies();
@@ -75,6 +82,9 @@ export class InterventionDialogHelpComponent {
       if (selectedAeroportId) {
         this.loadUsers(selectedAeroportId);
       }
+    });
+    this.formIntervention.get('zone')?.valueChanges.subscribe(zoneId => {
+      this.filterComptoiresByZone(zoneId);
     });
     if (this.data.intervention?.aeroport?.id) {
       this.loadUsers(this.data.intervention.aeroport.id);
@@ -93,10 +103,10 @@ export class InterventionDialogHelpComponent {
       this.compagnies = data;
     });
 
-    this.comptoireService.getAllComptoires().subscribe((data: any[]) => {
+    /*this.comptoireService.getAllComptoires().subscribe((data: any[]) => {
       this.comptoires = data;
       console.log("HElp : ",data);
-    });
+    });*/
 
     this.equipmentService.getAllEquipments().subscribe((data: any[]) => {
       this.equipments = data;
@@ -113,6 +123,12 @@ export class InterventionDialogHelpComponent {
     this.aeroportService.getAllAeroports().subscribe((data: any[]) => {
       this.aeroports = data;
     });
+    this.projetService.getAllProjets().subscribe(data => {
+      this.projets=data;
+    });
+    this.zoneService.getAllZones().subscribe(data =>{
+        this.zones = data;
+      });
   }
 
   onNoClick(): void {
@@ -124,6 +140,8 @@ export class InterventionDialogHelpComponent {
     console.log("USERS HELP : ",data);
   });
   }*/
+  projets!: Projet[];
+  zones!: Zone[];
   loadUsers(aeroportId: number): void {
     console.log("selectedAeroport",aeroportId);
     const selectedAeroport = this.aeroports.find(aeroport => aeroport.id === aeroportId);
@@ -140,7 +158,6 @@ export class InterventionDialogHelpComponent {
   saveIntervention(): void {
     console.log("Help validation : ",this.formIntervention.valid);
     if (this.formIntervention.valid) {
-      //console.log("Help validation : ",this.data)
       const formValue = this.formIntervention.getRawValue();
       const interventionData: Intervention = {
         id: formValue.id,
@@ -155,11 +172,13 @@ export class InterventionDialogHelpComponent {
         solution: formValue.solution,
         probleme: formValue.probleme,
         aeroport: formValue.aeroport,
+        projet:formValue.projet,
         duration:0
       };
 
       if (interventionData.id) {
         if (interventionData.status === 'FERMER') {
+          console.log("AVANT CLOSING ",interventionData);
           this.interventionService.endInterventionHelp(interventionData).subscribe({
             next: response => {
               this.dialogRef.close(true);
@@ -192,6 +211,14 @@ export class InterventionDialogHelpComponent {
     } else {
       console.log('Form is invalid');
     }
+  }
+
+  filterComptoiresByZone(zoneId: number): void {
+    console.log("Filter Started");
+    this.comptoireService.getAllComptoires().subscribe(data => {
+      this.comptoires = data.filter(comptoire => comptoire.zoneId === zoneId);
+    });
+    console.log("filterComptoireBYZOne",this.comptoires);
   }
 }
 

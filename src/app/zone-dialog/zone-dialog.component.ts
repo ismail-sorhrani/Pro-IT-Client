@@ -35,8 +35,7 @@ export class ZoneDialogComponent implements OnInit{
     this.getAllAeroports();
     this.formZone = this.fb.group({
       id: [this.data.zone.id || null],
-      zoneName: [this.data.zone.zoneName, Validators.required],
-      aeroportName: [this.data.zone.aeroportName, Validators.required]
+      zoneName: [this.data.zone.zoneName, Validators.required]
     });
 
   }
@@ -46,7 +45,7 @@ export class ZoneDialogComponent implements OnInit{
       const zoneData = this.formZone.value;
       if (zoneData.id) {
         // Edit zone
-        this.zoneService.updateZone(zoneData.id, zoneData.zoneName, zoneData.aeroportName).subscribe({
+        this.zoneService.updateZone(zoneData.id, zoneData.zoneName).subscribe({
           next: response => {
             console.log('Zone updated:', response);
             this.dialogRef.close(true);
@@ -57,7 +56,7 @@ export class ZoneDialogComponent implements OnInit{
         });
       } else {
         // Add new zone
-        this.zoneService.saveZone(zoneData.zoneName, zoneData.aeroportName).subscribe({
+        this.zoneService.saveZone(zoneData.zoneName).subscribe({
           next: response => {
             console.log('Zone saved:', response);
             this.dialogRef.close(true);

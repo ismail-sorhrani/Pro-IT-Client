@@ -1,40 +1,37 @@
-<!-- tbfdashboard.component.html -->
-<mat-card class="tbf-card">
-    <mat-card-title>TBF Calculation</mat-card-title>
-    <mat-card-content>
-      <form (ngSubmit)="onSubmit()" #tbfForm="ngForm">
-        <mat-grid-list cols="1" rowHeight="auto" gutterSize="16px">
-          <mat-grid-tile>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Equipment</mat-label>
-              <mat-select [(ngModel)]="selectedEquipment" name="equipment" required>
-                <mat-option *ngFor="let equipment of equipments" [value]="equipment.id">
-                  {{ equipment.equipmentName }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </mat-grid-tile>
-  
-          <mat-grid-tile>
-            <mat-form-field appearance="outline" class="full-width">
-              <mat-label>Month</mat-label>
-              <mat-select [(ngModel)]="selectedMonth" name="month" required>
-                <mat-option *ngFor="let month of months" [value]="month.value">
-                  {{ month.name }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </mat-grid-tile>
-  
-          <mat-grid-tile>
-            <button mat-raised-button color="primary" class="full-width" type="submit">Calculate TBF</button>
-          </mat-grid-tile>
-        </mat-grid-list>
-      </form>
-    </mat-card-content>
-  </mat-card>
-  
-  <div class="chart-container">
-    <canvas id="tbfChart"></canvas>
-  </div>
-  
+<mat-card class="chart-card">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Projet</mat-label>
+      <mat-select formControlName="projet">
+        <mat-option *ngFor="let projet of projects" [value]="projet.id">
+          {{ projet.projetName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Aéroport</mat-label>
+      <mat-select  formControlName="aeroport">
+        <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport.id">
+          {{ aeroport.aeroportName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="full-width">
+      <mat-label>Choisissez une date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="date">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker
+                      startView="multi-year"
+      ></mat-datepicker>
+    </mat-form-field>
+
+    <button class=" btn btn-outline-primary" type="submit">Submit</button>
+    <div>
+      <label>Le TBF est :</label>
+      <span *ngIf="resultTBF !== null">{{ resultTBF | number:'1.2-2' }}%</span>
+    </div>
+  </form>
+</mat-card>
+
+

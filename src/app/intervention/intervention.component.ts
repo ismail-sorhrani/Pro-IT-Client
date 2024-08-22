@@ -19,7 +19,7 @@ import {AppUserService} from "../services/app-user.service";
   styleUrls: ['./intervention.component.css']
 })
 export class InterventionComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'status', 'date', 'heureDebut','duration', 'heureFin', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme', 'aeroport', 'action'];
+  displayedColumns: string[] = ['id','date', 'heureDebut','heureFin','duration',  'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme', 'aeroport','projet', 'action'];
   //@ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild('paginatorEncours') paginatorEncours!: MatPaginator;
   @ViewChild('paginatorFermer') paginatorFermer!: MatPaginator;
@@ -61,7 +61,8 @@ export class InterventionComponent implements OnInit {
       equipment: ['', Validators.required],
       solution: ['', Validators.required],
       probleme: ['', Validators.required],
-      aeroport: ['', Validators.required]
+      aeroport: ['', Validators.required],
+      projet: ['', Validators.required]
     });
 
   }
@@ -203,11 +204,13 @@ export class InterventionComponent implements OnInit {
   }
 
   finishIntervention(intervention: any): void {
+    console.log("Open element ",intervention);
     const dialogRef = this.dialog.open(InterventionFinComponent, {
       data: {
         title: 'Terminer Intervention',
         intervention: intervention
       }
+
     });
     dialogRef.afterClosed().subscribe(result => {
     if (result) {

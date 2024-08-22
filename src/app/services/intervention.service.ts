@@ -37,6 +37,13 @@ export class InterventionService {
       }
     );
   }
+  getAllInterventionsByAeroportFilter(aeroport: string): Observable<Interventiion[]> {
+    return this.http.get<Interventiion[]>(`${this.baseUrl1}/interventions/aeroport`,
+      {
+        params: { aeroport }
+      }
+    );
+  }
   getAllInterventiions(): Observable<Intervention[]> {
     return this.http.get<Intervention[]>(`${this.baseUrl3}/interventions`
     );
@@ -47,9 +54,7 @@ export class InterventionService {
   }
 
 
-  getTBF(equipmentId: number, month: number) {
-    return this.http.get<Map<string, number>>(`${this.baseUrl3}/TBF?equipmentId=${equipmentId}&month=${month}`);
-  }
+
 
 
   getInterventionPercentages(comptoireId: number, month: number, year: number): Observable<any> {
@@ -58,7 +63,7 @@ export class InterventionService {
 
 
 
-  
+
   getAllInterventionsHelp(): Observable<Intervention[]> {
     return this.http.get<Intervention[]>(`${this.baseUrl2}/interventions`);
   }
@@ -91,6 +96,7 @@ export class InterventionService {
       solution: intervention.solution,
       probleme: intervention.probleme,
       aeroport: intervention.aeroport,
+      projet:intervention.projet,
       duration:0
     };
     return this.http.post<Intervention>(`${this.baseUrl1}/intervention`, interventionData);
@@ -110,6 +116,7 @@ export class InterventionService {
       solution: intervention.solution,
       probleme: intervention.probleme,
       aeroport: intervention.aeroport,
+      projet:intervention.projet,
       duration:0
     };
     console.log("service ", interventionData);
@@ -130,6 +137,7 @@ export class InterventionService {
       solution: intervention.solution,
       probleme: intervention.probleme,
       aeroport: intervention.aeroport,
+      projet:intervention.projet,
       duration:0
     };
     return this.http.post<Intervention>(`${this.baseUrl1}/intervention/update`, interventionData);
@@ -149,6 +157,7 @@ export class InterventionService {
       solution: intervention.solution,
       probleme: intervention.probleme,
       aeroport: intervention.aeroport,
+      projet:intervention.projet,
       duration:0
     };
     return this.http.post<Intervention>(`${this.baseUrl2}/intervention/update`, interventionData);
@@ -156,6 +165,7 @@ export class InterventionService {
 
 
   endIntervention(intervention: Intervention): Observable<Intervention> {
+    console.log('Avant:', intervention);
     const interventionData: Intervention = {
       id: intervention.id,
       status: 'FERMER', // Set status to 'FERMER'
@@ -169,6 +179,7 @@ export class InterventionService {
       solution: parseInt(intervention.solution.toString(), 10), // Ensure solution is a number
       probleme: parseInt(intervention.probleme.toString(), 10), // Ensure probleme is a number
       aeroport: parseInt(intervention.aeroport.toString(), 10), // Ensure aeroport is a number
+      projet: parseInt(intervention.projet.toString(), 10), // Ensure projet is a number
       duration:0
     };
 
@@ -191,6 +202,7 @@ export class InterventionService {
       solution: parseInt(intervention.solution.toString(), 10), // Ensure solution is a number
       probleme: parseInt(intervention.probleme.toString(), 10), // Ensure probleme is a number
       aeroport: parseInt(intervention.aeroport.toString(), 10), // Ensure aeroport is a number
+      projet: parseInt(intervention.projet.toString(), 10), // Ensure projet is a number
       duration:0
     };
 
@@ -202,6 +214,37 @@ export class InterventionService {
 
   getInterventionsByProblemType() {
     return this.http.get<any>(`${this.baseUrl3}/interventions/by-problem-type`
+    );
+  }
+  getInterventionsByProblemTypeAnsMonth() {
+    return this.http.get<any>(`${this.baseUrl3}/interventions/by-problem-and-month`
+    );
+  }
+
+
+
+  getTbf(projetId: number, month: number, year: number, aeroportId: number) :Observable<any>{
+
+    return this.http.get<any>(`${this.baseUrl3}/interventions/tbf`,
+      {
+        params: { projetId,
+          month,
+          year,
+          aeroportId
+        }
+      }
+      );
+  }
+
+  getTbfYear(projetId: number, year: number, aeroportId: number) :Observable<any>{
+
+    return this.http.get<any>(`${this.baseUrl3}/interventions/tbf/year`,
+      {
+        params: { projetId,
+          year,
+          aeroportId
+        }
+      }
     );
   }
 }

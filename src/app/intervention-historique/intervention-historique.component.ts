@@ -5,10 +5,12 @@ import {MatTableDataSource} from "@angular/material/table";
 import {InterventionService} from "../services/intervention.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthServiceService} from "../services/auth-service.service";
-import {Interventiion} from "../models/model/intervention.model";
+import {Interventiion,AppUser} from "../models/model/intervention.model";
 import {ComptoireService} from "../services/comptoire.service";
-import {Aeroport, ComptoireDTO} from "../models/model/model.module";
+import {Aeroport, ComptoireDTO, Zone} from "../models/model/model.module";
 import {AeroportService} from "../services/aeroport.service";
+import {AppUserService} from "../services/app-user.service";
+import {ZoneService} from "../services/zone.service";
 
 @Component({
   selector: 'app-intervention-historique',
@@ -34,6 +36,11 @@ export class InterventionHistoriqueComponent implements OnInit {
   selectedComptoire: ComptoireDTO | null = null;
   aeroports:Aeroport[]=[];
   selectedAeroport:Aeroport | null=null;
+  techniciens: any[]=[];
+  selectedtechnicien: AppUser|null=null;
+  selectedDate: Date | null = null;
+  zones!: Zone[];
+  selectedZone: Zone| null = null;
 
   constructor(
     private interventionService: InterventionService,
@@ -41,7 +48,9 @@ export class InterventionHistoriqueComponent implements OnInit {
     private snackBar: MatSnackBar,
     private authService: AuthServiceService,
     private comptoireService: ComptoireService,
-    private aeroportService: AeroportService
+    private aeroportService: AeroportService,
+    private userService:AppUserService,
+    private zoneService:ZoneService
   ) {
     this.dataSourceFermer = new MatTableDataSource<Interventiion>();
   }
@@ -50,9 +59,11 @@ export class InterventionHistoriqueComponent implements OnInit {
     this.isTechnicien = this.authService.roles.includes('TECHNICIEN');
     this.isAdmin = this.authService.roles.includes('ADMIN');
     this.isHelpdesk=this.authService.roles.includes('HELP_DESK')
-    this.fetchComptoires(); // Charger les comptoires disponibles
     this.fetchAeroport();
+    this.fetchUsers();
+    this.fetchZones();
     this.fetchInterventions();
+
   }
   fetchInterventions(): void {
     if (this.isTechnicien) {
@@ -106,14 +117,16 @@ export class InterventionHistoriqueComponent implements OnInit {
 
 
   fetchComptoires(): void {
+    console.log("La zone :",this.selectedZone);
     this.comptoireService.getAllComptoires().subscribe({
       next: comptoires => {
-        this.comptoires = comptoires;
+        this.comptoires = comptoires.filter(comptoire => comptoire.zoneId === this.selectedZone?.id);
       },
       error: err => {
         console.log('Error fetching comptoires:', err);
       }
     });
+    console.log("List Of Comptoires : ",this.comptoires);
   }
   fetchAeroport():void{
     this.aeroportService.getAllAeroports().subscribe(data => {
@@ -152,6 +165,17 @@ export class InterventionHistoriqueComponent implements OnInit {
 
       );
     }
+    if(this.selectedtechnicien){
+      filteredData=filteredData.filter(intervention =>
+        intervention.appUser?.username===this.selectedtechnicien?.username
+
+      );
+    }
+    if (this.selectedDate) {
+      filteredData = filteredData.filter(intervention =>
+        new Date(intervention.date).toDateString() === this.selectedDate?.toDateString()
+      );
+    }
 
     this.dataSourceFermer.data = filteredData;
   }
@@ -165,6 +189,8 @@ export class InterventionHistoriqueComponent implements OnInit {
     this.selectedDuration = '';
     this.selectedComptoire = null;
     this.selectedAeroport=null;
+    this.selectedDate=null;
+    this.selectedtechnicien=null;
     this.fetchInterventions();
   }
   convertToMinutes(duration: string): number {
@@ -172,5 +198,18 @@ export class InterventionHistoriqueComponent implements OnInit {
     const hours = parseInt(parts[0]) || 0;
     const minutes = parseInt(parts[1]) || 0;
     return hours * 60 + minutes;
+  }
+
+    fetchUsers(): void {
+      this.userService.getAllUsersWithRole("TECHNICIEN").subscribe(data => {
+        this.techniciens=data;
+      });
+
+  }
+
+  fetchZones() {
+    this.zoneService.getAllZones().subscribe(data => {
+      this.zones=data;
+    });
   }
 }

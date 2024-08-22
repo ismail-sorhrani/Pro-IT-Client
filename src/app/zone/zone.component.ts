@@ -14,7 +14,7 @@ import {MatPaginator} from "@angular/material/paginator";
   styleUrl: './zone.component.css'
 })
 export class ZoneComponent implements OnInit{
-  displayedColumns: string[] = ['id', 'zoneName', 'aeroportName','action'];
+  displayedColumns: string[] = ['id', 'zoneName', 'action'];
   public dataSource! : any;
   public zones!:any;
   @ViewChild(MatPaginator) paginator!: MatPaginator;

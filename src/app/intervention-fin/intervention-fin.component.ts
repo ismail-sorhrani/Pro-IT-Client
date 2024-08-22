@@ -8,6 +8,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {InterventionService} from "../services/intervention.service";
 import {Intervention} from "../models/model/model.module";
 import {AuthServiceService} from "../services/auth-service.service";
+import {ProjetService} from "../services/projet.service";
 
 @Component({
   selector: 'app-intervention-fin',
@@ -31,7 +32,8 @@ export class InterventionFinComponent {
     private problemeService:ProblemeService,
     private snackBar: MatSnackBar,
     private interventionService: InterventionService,
-    private authService: AuthServiceService
+    private authService: AuthServiceService,
+    private projetService:ProjetService
   ) {
     this.formIntervention = this.fb.group({
       equipment: [data.intervention.equipment?.id || '', Validators.required],
@@ -45,7 +47,8 @@ export class InterventionFinComponent {
     this.ishelpDesk = this.authService.roles.includes('HELP_DESK');
   }
   loadDependencies(): void {
-    this.equipmentService.getAllEquipments().subscribe(data => {
+    console.log("ID PROJET",this.data.intervention.projet.id);
+    this.projetService.getEquipmentsByProjet(this.data.intervention.projet.id).subscribe(data => {
       this.equipments = data;
       console.log("equiii : ",data);
     });
@@ -105,6 +108,7 @@ export class InterventionFinComponent {
         solution: formValue.solution,
         probleme: formValue.probleme,
         aeroport: this.data.intervention.aeroport,
+        projet: this.data.intervention.projet,
         duration:0
       };
 

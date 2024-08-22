@@ -43,7 +43,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>
-      <mat-paginator  [pageSizeOptions]="[5, 10, 20]"
+      <mat-paginator #compagniePaginator  [pageSizeOptions]="[5, 10, 20]"
                       showFirstLastButtons
                       aria-label="Select page of periodic elements">
       </mat-paginator>
@@ -104,7 +104,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
       </table>
-      <mat-paginator  [pageSizeOptions]="[5, 10, 20]"
+      <mat-paginator #addcompagniePaginator  [pageSizeOptions]="[5, 10, 20]"
                       showFirstLastButtons
                       aria-label="Select page of periodic elements">
       </mat-paginator>
@@ -143,7 +143,7 @@
         </div>
       </form>
       <h6>La liste des compagnie dans un aeroport</h6>
-      <table mat-table [dataSource]="dataSource1"  class="mat-elevation-z8">
+      <table mat-table [dataSource]="dataSource2"  class="mat-elevation-z8">
 
         <!-- Name Column -->
         <ng-container matColumnDef="aeroport">
@@ -165,7 +165,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns1"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns1;"></tr>
       </table>
-      <mat-paginator  [pageSizeOptions]="[5, 10, 20]"
+      <mat-paginator #removecompagniePaginator  [pageSizeOptions]="[5, 10, 20]"
                       showFirstLastButtons
                       aria-label="Select page of periodic elements">
       </mat-paginator>

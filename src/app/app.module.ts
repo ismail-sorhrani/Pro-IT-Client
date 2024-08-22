@@ -27,7 +27,7 @@ import { ZoneDialogComponent } from './zone-dialog/zone-dialog.component';
 import {MatDialogActions, MatDialogClose, MatDialogContent} from "@angular/material/dialog";
 import {MatInputModule, MatLabel} from "@angular/material/input";
 import { MatSelectModule} from "@angular/material/select";
-import {MatOptionModule} from "@angular/material/core";
+import {MatNativeDateModule, MatOptionModule} from "@angular/material/core";
 import { MatPaginatorModule} from "@angular/material/paginator";
 import { AeroportDialogComponent } from './aeroport-dialog/aeroport-dialog.component';
 import { CompagnieComponent } from './compagnie/compagnie.component';
@@ -58,6 +58,19 @@ import { UsersComponent } from './users/users.component';
 import { UserDialogComponent } from './user-dialog/user-dialog.component';
 import { TBFDashboardComponent } from './tbfdashboard/tbfdashboard.component';
 import { InterventionByComptoireComponent } from './intervention-by-comptoire/intervention-by-comptoire.component';
+import {
+  MatDatepicker,
+  MatDatepickerInput,
+  MatDatepickerModule,
+  MatDatepickerToggle
+} from "@angular/material/datepicker";
+import { DataImportComponent } from './data-import/data-import.component';
+import { ProjetComponent } from './projet/projet.component';
+import { ProjetDialogComponent } from './projet-dialog/projet-dialog.component';
+import {DatePipe} from "@angular/common";
+import { InterventionsByProjetComponent } from './interventions-by-projet/interventions-by-projet.component';
+import { InterventionsByProjetYearComponent } from './interventions-by-projet-year/interventions-by-projet-year.component';
+import { TbfChartComponent } from './tbf-chart/tbf-chart.component';
 
 @NgModule({
   declarations: [
@@ -95,41 +108,56 @@ import { InterventionByComptoireComponent } from './intervention-by-comptoire/in
     UsersComponent,
     UserDialogComponent,
     TBFDashboardComponent,
-    InterventionByComptoireComponent
+    InterventionByComptoireComponent,
+    DataImportComponent,
+    ProjetComponent,
+    ProjetDialogComponent,
+    InterventionsByProjetComponent,
+    InterventionsByProjetYearComponent,
+    TbfChartComponent
   ],
-    imports: [
-        FormsModule,
-        BrowserModule,
-        BrowserAnimationsModule,
-        AppRoutingModule,
-        ReactiveFormsModule,
-        HttpClientModule,
-        MatToolbarModule,
-        MatButtonModule,
-        MatIconModule,
-        MatFormFieldModule,
-        MatLabel,
-        MatMenuModule,
-        MatMenuTrigger,
-        MatSidenavModule,
-        MatListModule,
-        MatDialogContent,
-        MatDialogActions,
-        MatDialogClose,
-        MatInputModule,
-        MatSelectModule,
-        MatOptionModule,
-        MatPaginatorModule,
-        MatCardModule,
-        MatCardHeader,
-        MatCardActions,
-        MatCardContent,
-        MatTableModule,
-        MatTabGroup,
-        MatTab,
-        BaseChartDirective
-    ],
+  imports: [
+    FormsModule,
+    BrowserModule,
+    BrowserAnimationsModule,
+    AppRoutingModule,
+    ReactiveFormsModule,
+    HttpClientModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatLabel,
+    MatMenuModule,
+    MatMenuTrigger,
+    MatSidenavModule,
+    MatListModule,
+    MatDialogContent,
+    MatDialogActions,
+    MatDialogClose,
+    MatInputModule,
+    MatSelectModule,
+    MatOptionModule,
+    MatPaginatorModule,
+    MatCardModule,
+    MatCardHeader,
+    MatCardActions,
+    MatCardContent,
+    MatTableModule,
+    MatTabGroup,
+    MatTab,
+    BaseChartDirective,
+    MatDatepickerToggle,
+    MatDatepickerModule,
+    MatDatepickerInput,
+    MatNativeDateModule,  // Fournisseur pour DateAdapter
+    MatFormFieldModule,
+    MatInputModule
+
+
+  ],
   providers: [
+    DatePipe,
     { provide: HTTP_INTERCEPTORS, useClass: AppHttpInterceptor, multi: true },
     provideAnimationsAsync()
   ],

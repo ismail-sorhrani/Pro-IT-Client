@@ -5,10 +5,41 @@
   </mat-card-header>
       <mat-card-content>
         <div class="table-container">
-          <mat-form-field appearance="outline" class="search-field">
-            <mat-label>Rechercher</mat-label>
-            <input matInput (keyup)="applyFilter($event, dataSourceFermer)" placeholder="Rechercher ...">
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Durée</mat-label>
+            <mat-select [(ngModel)]="selectedDuration" (selectionChange)="applyFilter()">
+              <mat-option *ngFor="let option of durationOptions" [value]="option">{{option}}</mat-option>
+            </mat-select>
           </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Zone</mat-label>
+            <mat-select [(ngModel)]="selectedZone" (selectionChange)="fetchComptoires()">
+              <mat-option *ngFor="let zone of zones" [value]="zone">
+                {{ zone.zoneName }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Comptoire</mat-label>
+            <mat-select [(ngModel)]="selectedComptoire" (selectionChange)="applyFilter()">
+              <mat-option *ngFor="let comptoire of comptoires" [value]="comptoire">{{comptoire.comptoireName}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Technicien</mat-label>
+            <mat-select [(ngModel)]="selectedtechnicien" (selectionChange)="applyFilter()">
+              <mat-option *ngFor="let technicien of techniciens" [value]="technicien">
+                {{technicien.username}} : {{technicien.aeroport.aeroportName}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Date</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="applyFilter()">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+          <button mat-raised-button color="primary" (click)="clearFilter()">Annuler le filtre</button>
           <table mat-table [dataSource]="dataSourceFermer" class="mat-elevation-z8 styled-table">
 
             &lt;!&ndash; Columns Definitions &ndash;&gt;

@@ -1,5 +1,5 @@
 <div class="bleu-body">
-  <img width=100 height="150" ngSrc="./assets/erp.jpg" alt="Une belle image">
+  <img width=100 height="150" src="assets/proitSW-logo.png" alt="Une belle image">
 <div class="centered-element">
   <div class="card">
     <div class="card-header">Authentication</div>
@@ -14,8 +14,9 @@
           <input type="password" class="form-control" formControlName="password">
         </div>
         <div  class="text-danger" *ngIf="visibility">Incorrect username or password</div>
-        <button class="btn btn-success">Login</button>
-
+        <div class="text-center">
+          <button class="btn btn-outline-primary">Login</button>
+        </div>
       </form>
     </div>
 

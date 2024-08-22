@@ -36,8 +36,8 @@ export class AppUserService {
 
   }
 
-  updateUser(value: ɵTypedOrUntyped<any, ɵFormGroupValue<any>, any>) {
-
+  updateUser(user: any):Observable<any> {
+    return this.http.post(`${this.baseUrl}/update`, user);
   }
 
 

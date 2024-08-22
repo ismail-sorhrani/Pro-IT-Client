@@ -20,6 +20,8 @@ import {
   InterventionHistoriqueAeroportComponent
 } from "./intervention-historique-aeroport/intervention-historique-aeroport.component";
 import {UsersComponent} from "./users/users.component";
+import {DataImportComponent} from "./data-import/data-import.component";
+import {ProjetComponent} from "./projet/projet.component";
 
 const routes: Routes = [
   {path : "", redirectTo :"/login" ,pathMatch:"full"},
@@ -36,7 +38,10 @@ const routes: Routes = [
       {path : "zone", component: ZoneComponent},
       {path : "aeroport", component: AeroportComponent},
       {path : "comptoire", component: ComptoireComponent},
-      {path: "users",component: UsersComponent}
+      {path: "users",component: UsersComponent},
+      {path:"data-import",component:DataImportComponent},
+      {path: "projet",component: ProjetComponent}
+
 
     ]},
   {path :"technicien", component:TechnicienComponent ,

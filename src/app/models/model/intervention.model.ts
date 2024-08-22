@@ -51,6 +51,11 @@ export interface Probleme {
   id: number;
   libelle: string;
 }
+export interface Projet{
+  id:number;
+  projetName:string;
+  equipments:Equipment[];
+}
 
 export interface Interventiion {
   id: number;
@@ -65,5 +70,6 @@ export interface Interventiion {
   solution: Solution;
   probleme: Probleme;
   aeroport: Aeroport;
+  projet: Projet;
   duration:any;
 }

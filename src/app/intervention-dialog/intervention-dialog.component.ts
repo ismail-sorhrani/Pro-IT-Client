@@ -9,8 +9,10 @@ import { SolutionService } from '../services/solution.service';
 import { ProblemeService } from '../services/probleme.service';
 import { AeroportService } from '../services/aeroport.service';
 import { AuthServiceService } from '../services/auth-service.service';
-import { Intervention } from '../models/model/model.module';
+import {Intervention, Projet, Zone} from '../models/model/model.module';
 import {AppUserService} from "../services/app-user.service";
+import {ProjetService} from "../services/projet.service";
+import {ZoneService} from "../services/zone.service";
 
 @Component({
   selector: 'app-intervention-dialog',
@@ -29,6 +31,9 @@ export class InterventionDialogComponent implements OnInit {
   minDate: Date;
   minTime: string;
   aeroport!:any;
+  projets!: Projet[];
+  zones!: Zone[];
+
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: any,
     private dialogRef: MatDialogRef<InterventionDialogComponent>,
@@ -41,7 +46,9 @@ export class InterventionDialogComponent implements OnInit {
     private problemeService: ProblemeService,
     private aeroportService: AeroportService,
     private authService: AuthServiceService,
-    private appUserService: AppUserService
+    private appUserService: AppUserService,
+    private projetService:ProjetService,
+    private zoneService:ZoneService
   ) {
     // Set minDate to current date
     this.minDate = new Date();
@@ -65,12 +72,37 @@ export class InterventionDialogComponent implements OnInit {
       comptoire: [this.data.intervention?.comptoire?.id || '', Validators.required],
       equipment: [this.data.intervention?.equipment?.id || '', Validators.nullValidator],
       solution: [this.data.intervention?.solution?.id || '',Validators.nullValidator],
-      probleme: [this.data.intervention?.probleme?.id || '',Validators.nullValidator]
+      probleme: [this.data.intervention?.probleme?.id || '',Validators.nullValidator],
       //aeroport: [this.data.intervention?.aeroport?.id || '', Validators.required]
+      projet: [this.data.intervention?.projet?.id || '', Validators.required],
+      zone:['',Validators.nullValidator]
     });
 
     this.loadDependencies();
+    this.formIntervention.get('zone')?.valueChanges.subscribe(zoneId => {
+      this.filterComptoiresByZone(zoneId);
+    });
+    this.formIntervention.get('projet')?.valueChanges.subscribe(id => {
+      this.filterEquipmentsByProjet(id);
+    });
+
   }
+  filterComptoiresByZone(zoneId: number): void {
+    console.log("Filter Started");
+    this.comptoireService.getAllComptoires().subscribe(data => {
+      this.comptoires = data.filter(comptoire => comptoire.zoneId === zoneId);
+    });
+    console.log("filterComptoireBYZOne",this.comptoires);
+  }
+  filterEquipmentsByProjet(id:number) {
+    console.log("START FILTER EQUIPEMNTS");
+    this.projetService.getEquipmentsByProjet(id).subscribe(data =>{
+      this.equipments=data;
+    });
+    console.log("Equipment filter",this.equipments);
+  }
+
+
 
   loadDependencies(): void {
     this.appUserService.getAeroport(this.authService.username).subscribe((data: any[]) => {
@@ -81,14 +113,10 @@ export class InterventionDialogComponent implements OnInit {
       this.compagnies = data;
     });
 
-    this.comptoireService.getAllComptoires().subscribe(data => {
-      this.comptoires = data;
-    });
-
-    this.equipmentService.getAllEquipments().subscribe(data => {
+    /*this.equipmentService.getAllEquipments().subscribe(data => {
       this.equipments = data;
       console.log("equiii : ",data);
-    });
+    });*/
 
     this.solutionService.getAllSolutions().subscribe(data => {
       this.solutions = data;
@@ -100,6 +128,12 @@ export class InterventionDialogComponent implements OnInit {
 
     this.aeroportService.getAllAeroports().subscribe(data => {
       this.aeroports = data;
+    });
+    this.projetService.getAllProjets().subscribe(data => {
+      this.projets=data;
+    });
+    this.zoneService.getAllZones().subscribe(data =>{
+      this.zones = data;
     });
   }
 
@@ -124,6 +158,7 @@ export class InterventionDialogComponent implements OnInit {
         solution: formValue.solution,
         probleme: formValue.probleme,
         aeroport: this.aeroport.id,
+        projet:formValue.projet,
         duration:0
       };
 
@@ -162,5 +197,6 @@ export class InterventionDialogComponent implements OnInit {
       console.log('Form is invalid');
     }
   }
+
 
 }

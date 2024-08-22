@@ -42,7 +42,7 @@
 
         <ng-container matColumnDef="aeroport">
           <th mat-header-cell *matHeaderCellDef> Aeroport </th>
-          <td mat-cell *matCellDef="let element"> {{element.aeroport1?.aeroportName || 'N/A'}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.aeroport?.aeroportName || 'N/A'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="action">
@@ -51,9 +51,7 @@
             <button (click)="openEditUserDialog(element)" mat-icon-button class="btn btn-outline-warning">
               <mat-icon>edit</mat-icon>
             </button>
-            <button (click)="deleteUser(element)" mat-icon-button class="btn btn-outline-danger">
-              <mat-icon>delete</mat-icon>
-            </button>
+
           </td>
         </ng-container>
 

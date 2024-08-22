@@ -1,91 +1,140 @@
 import { Component, OnInit } from '@angular/core';
-import { ChartData, ChartOptions, ChartType, ChartDataset } from "chart.js";
+import {ChartOptions, ChartType, ChartDataset, Chart, registerables, ChartData} from "chart.js";
 import { InterventionService } from "../services/intervention.service";
-
+import {DatePipe} from "@angular/common";
+import {MatDatepickerInputEvent} from "@angular/material/datepicker";
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 @Component({
   selector: 'app-interventions-by-probleme-chart',
   templateUrl: './interventions-by-probleme-chart.component.html',
   styleUrls: ['./interventions-by-probleme-chart.component.css']
 })
 export class InterventionsByProblemeChartComponent implements OnInit {
-  public barChartOptions: ChartOptions<'bar'> = {
+    public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
-    scales: {
-      x: { 
-        beginAtZero: true,
-        display: false, 
-        ticks: {
-          display: false 
-        },
-        grid: {
-          display: false 
-        }
-      },
-      y: { beginAtZero: true }
-    },
     plugins: {
+      legend: {
+        position: 'right',
+      },
       title: {
         display: true,
-        text: 'Intervention By Problem',
-        font: {
-          size: 18
+        text: 'Répartition des interventions par problème pour le mois sélectionné'
+      },
+      tooltip: {
+        callbacks: {
+          label: function(tooltipItem: any) {
+            const label = tooltipItem.label || '';
+            const value = tooltipItem.raw as number; // Assertion de type
+            return `${label}: ${value.toFixed(2)}%`;
+          }
         }
+      },
+      datalabels: {
+        anchor: function(context: any) {
+          // Logic to determine the anchor position
+          return context.dataIndex % 2 === 0 ? 'end' : 'center';
+        },
+        align: function(context: any) {
+          // Logic to align the label
+          return context.dataIndex % 2 === 0 ? 'start' : 'center';
+        },
+        formatter: (value: number) => {
+          return `${value.toFixed(2)}%`;
+        },
+        color: '#000',
+        font: {
+          weight: 'bold',
+          size: 12
+        },
+        offset: 10
+
       }
     }
   };
+  public pieChartLabels: string[] = [];
+  public pieChartType: ChartType = 'pie';
+  public pieChartLegend = true;
 
-  public barChartLabels: string[] = [];
-  public barChartData: ChartData<'bar'> = {
-    labels: this.barChartLabels,
-    datasets: []
-  };
+  public pieChartData: ChartDataset<'pie'>[] = [
+    { data: [], label: 'Interventions', backgroundColor: [] }
+  ];
 
-  public barChartLegend = true;
-  public barChartType: 'bar' = 'bar';
+  selectedDate: Date | null = null;
 
-  public problemColors: { problem: string, color: string }[] = [];
+  constructor(private interventionService: InterventionService, private datePipe: DatePipe) {
+    Chart.register(...registerables);
+    Chart.register(ChartDataLabels); // Enregistrez le plugin ChartDataLabels
 
-  constructor(private interventionService: InterventionService) {}
+  }
 
   ngOnInit(): void {
-    this.interventionService.getInterventionsByProblemType().subscribe(data => {
-      this.barChartLabels = data.problems; // Assuming `data` has a `problems` property
+    this.loadChartData();
+  }
 
-      const colors = this.generateLightColors(data.problems.length); // Generate light colors
-      this.problemColors = data.problems.map((problem:string, index:number) => ({
-        problem,
-        color: colors[index]
-      }));
+  onDateChange(event: MatDatepickerInputEvent<Date>): void {
+    this.selectedDate = event.value;
+    this.loadChartData();
+  }
 
-      this.barChartData.datasets = data.problems.map((problem:string, index:number) => ({
-        data: [data.counts[index]], // Data for each problem
-        label: problem,
-        backgroundColor: colors[index],
-        borderColor: this.adjustColor(colors[index], -20),
-        borderWidth: 1
-      }));
+  private loadChartData(): void {
+    this.interventionService.getAllInterventiiions().subscribe(data => {
+      const problemeMap = new Map<string, number>();
+      const colors: string[] = [];
+      let totalInterventions = 0;
+
+      data.forEach((intervention: any) => {
+        const interventionDate = new Date(intervention.date);
+        const month = interventionDate.getMonth();
+        const year = interventionDate.getFullYear();
+
+        if (this.selectedDate) {
+          const selectedMonth = this.selectedDate.getMonth();
+          const selectedYear = this.selectedDate.getFullYear();
+          if (month !== selectedMonth || year !== selectedYear) {
+            return;
+          }
+        }
+
+        if (intervention.probleme && intervention.probleme.libelle) {
+          const problemeName = intervention.probleme.libelle;
+          if (!problemeMap.has(problemeName)) {
+            problemeMap.set(problemeName, 0);
+            colors.push(this.getRandomColor());
+          }
+          problemeMap.set(problemeName, problemeMap.get(problemeName)! + 1);
+          totalInterventions++;
+        }
+      });
+
+      if (totalInterventions > 0) {
+        this.pieChartLabels = Array.from(problemeMap.keys());
+        this.pieChartData = [
+          {
+            data: Array.from(problemeMap.values()).map(count => (count / totalInterventions) * 100),
+            label: 'Interventions',
+            backgroundColor: colors
+          }
+        ];
+      } else {
+        this.pieChartLabels = [];
+        this.pieChartData = [
+          {
+            data: [],
+            label: 'Interventions',
+            backgroundColor: []
+          }
+        ];
+      }
     });
   }
 
-  private generateLightColors(length: number): string[] {
-    const colors: string[] = [];
-    for (let i = 0; i < length; i++) {
-      const hue = (i * 360 / length) % 360;
-      const lightness = 80; // Adjust lightness for softer colors
-      const saturation = 70; // Adjust saturation for pastel shades
-      colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
-    }
-    return colors;
-  }
-
-  private adjustColor(color: string, amount: number): string {
-    // Convert HSL to RGB, adjust the color, and return it
-    const hsl = color.match(/hsl\((\d+), (\d+)%, (\d+)%\)/);
-    if (hsl) {
-      const [_, h, s, l] = hsl.map(Number);
-      const newL = Math.min(100, Math.max(0, l + amount));
-      return `hsl(${h}, ${s}%, ${newL}%)`;
+  private getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
   }
+
 }

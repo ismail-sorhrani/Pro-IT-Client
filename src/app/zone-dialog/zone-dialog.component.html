@@ -5,14 +5,6 @@
       <mat-label>zoneName</mat-label>
       <input matInput formControlName="zoneName">
     </mat-form-field>
-    <mat-form-field>
-      <mat-label>aeroportName</mat-label>
-      <mat-select formControlName="aeroportName">
-        <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport.aeroportName">
-          {{ aeroport.aeroportName }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
 
   </div>
   <div mat-dialog-actions>

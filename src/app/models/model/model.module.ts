@@ -27,7 +27,8 @@ export interface ComptoireDTO {
 export interface EquipmentDTO {
   id: number;
   equipmentName: string;
-
+  prjetName:string;
+  projetId:number;
 }
 export interface Probleme {
   id: number;
@@ -50,6 +51,7 @@ export interface Intervention {
   solution: number;
   probleme: number;
   aeroport: number;
+  projet:number;
   duration:any;
 }
 export interface appUser{
@@ -64,5 +66,10 @@ export interface DecodedToken {
 export interface AppRole{
   id:number,
   roleName:string
+}
+export interface Projet{
+  id:number,
+  projetName:string,
+  equipments:EquipmentDTO[];
 }
 

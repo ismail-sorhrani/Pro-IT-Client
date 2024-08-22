@@ -18,9 +18,12 @@ import {AeroportDTO} from "../models/model/model.module";
 export class CompagnieComponent implements OnInit {
   displayedColumns: string[] = ['id','compagnieName','action'];
   displayedColumns1: string[] = ['aeroport','compagnieNames'];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('compagniePaginator') compagniePaginator!: MatPaginator;
+  @ViewChild('addcompagniePaginator') addcompagniePaginator!: MatPaginator;
+  @ViewChild('removecompagniePaginator') removecompagniePaginator!: MatPaginator;
   public dataSource! : any;
   public dataSource1 = new MatTableDataSource<AeroportDTO>();
+  public dataSource2 = new MatTableDataSource<AeroportDTO>();
   public compagnies!:any;
   public aeroports!:any;
   formCompanieAeroport!:FormGroup;
@@ -48,7 +51,7 @@ export class CompagnieComponent implements OnInit {
         console.log('Data received: ', data);
         this.compagnies = data;
         this.dataSource = new MatTableDataSource(this.compagnies);
-        this.dataSource.paginator = this.paginator;
+        this.dataSource.paginator = this.compagniePaginator;
         this.cdr.detectChanges();
       },
       error: err => {
@@ -73,7 +76,9 @@ export class CompagnieComponent implements OnInit {
     this.aeroportService.getAeroportCompanie().subscribe(
       data => {
       this.dataSource1.data = data;
-      this.dataSource1.paginator = this.paginator;
+      this.dataSource1.paginator = this.addcompagniePaginator;
+        this.dataSource2.data = data;
+        this.dataSource2.paginator = this.removecompagniePaginator;
     });
   }
   openDialog(compagnie?: any): void {

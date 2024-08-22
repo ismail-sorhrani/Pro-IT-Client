@@ -14,23 +14,30 @@
       <mat-label>Utilisateur</mat-label>
       <input matInput formControlName="appUser" readonly>
     </mat-form-field>
-
+    <mat-form-field class="custom-form-field">
+      <mat-label>Zone</mat-label>
+      <mat-select formControlName="zone">
+        <mat-option *ngFor="let zone of zones" [value]="zone.id">
+          {{ zone.zoneName }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-form-field class="custom-form-field">
       <mat-label>Comptoire</mat-label>
       <mat-select formControlName="comptoire">
         <mat-option *ngFor="let comptoire of comptoires" [value]="comptoire.id">
-          {{ comptoire.comptoireName }} : {{comptoire.zoneName || '--'}} : {{comptoire.aeroportName || '--'}}
+          {{ comptoire.comptoireName }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <!--<mat-form-field class="custom-form-field">
-      <mat-label>Aéroport</mat-label>
-      <mat-select formControlName="aeroport">
-        <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport.id">
-          {{ aeroport.aeroportName }}
+    <mat-form-field class="custom-form-field">
+      <mat-label>Projet</mat-label>
+      <mat-select formControlName="projet">
+        <mat-option *ngFor="let projet of projets" [value]="projet.id">
+          {{ projet.projetName }}
         </mat-option>
       </mat-select>
-    </mat-form-field>-->
+    </mat-form-field>
     <div *ngIf="data.intervention?.id && data.intervention?.status === 'FERMER'">
     <mat-form-field class="custom-form-field">
       <mat-label>Equipment</mat-label>

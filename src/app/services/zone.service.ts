@@ -15,13 +15,13 @@ export class ZoneService {
   }
 
 
-  saveZone(zoneName: string, aeroportName: string) : Observable<any> {
-    const zone = { zoneName, aeroportName };
+  saveZone(zoneName: string) : Observable<any> {
+    const zone = { zoneName};
     return this.http.post<any>("http://localhost:8082/admin/add-zone",zone);
   }
 
-  updateZone(id: number, zoneName: string, aeroportName: string): Observable<any> {
-    const zone = { id,zoneName, aeroportName };
+  updateZone(id: number, zoneName: string): Observable<any> {
+    const zone = { id,zoneName };
     return this.http.post<any>("http://localhost:8082/admin/zone/update", zone);
   }
 

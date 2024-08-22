@@ -2,7 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { Chart } from 'chart.js';
 import { InterventionService } from '../services/intervention.service';
 import { EquipmentService } from '../services/equipment.service';
-import { EquipmentDTO } from '../models/model/model.module';
+import {EquipmentDTO, Projet} from '../models/model/model.module';
+import {AeroportService} from "../services/aeroport.service";
+import {ProjetService} from "../services/projet.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-tbfdashboard',
@@ -10,93 +13,66 @@ import { EquipmentDTO } from '../models/model/model.module';
   styleUrls: ['./tbfdashboard.component.css']
 })
 export class TBFDashboardComponent implements OnInit {
-  equipments: EquipmentDTO[] = [];
-  months = [
-    { value: 1, name: 'January' },
-    { value: 2, name: 'February' },
-    { value: 3, name: 'March' },
-    { value: 4, name: 'April' },
-    { value: 5, name: 'May' },
-    { value: 6, name: 'June' },
-    { value: 7, name: 'July' },
-    { value: 8, name: 'August' },
-    { value: 9, name: 'September' },
-    { value: 10, name: 'October' },
-    { value: 11, name: 'November' },
-    { value: 12, name: 'December' }
-  ];
-  selectedEquipment: number | null = null;
-  selectedMonth: number | null = null;
-  tbfData: Map<string, number> = new Map();
-  chart: Chart | undefined;
-
-  constructor(private interventionservice: InterventionService, private equipementservice: EquipmentService) {}
+  form: FormGroup;
+  public aeroports!:any;
+  public projects!: Projet[];
+  resultTBF: number | null = null;
+  constructor(private interventionservice: InterventionService,
+              private aeroportService:AeroportService,
+              private projetService:ProjetService,
+              private fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      projet: ['',Validators.required],
+      aeroport: ['',Validators.required],
+      date: ['',Validators.required]
+    });
+  }
 
   ngOnInit(): void {
-    this.fetchEquipments();
+    this.fetchAeroports();
+    this.fetchProjets();
   }
-
-  fetchEquipments() {
-    this.equipementservice.getAllEquipments().subscribe(data => this.equipments = data);
-  }
-
-  onSubmit() {
-    if (this.selectedEquipment && this.selectedMonth) {
-      this.interventionservice.getTBF(this.selectedEquipment, this.selectedMonth).subscribe(data => {
-        this.tbfData = new Map(Object.entries(data));
-        this.updateChart();
-      });
-    }
-  }
-
-  updateChart() {
-    const labels = Array.from(this.tbfData.keys());
-    const values = Array.from(this.tbfData.values());
-
-    if (this.chart) {
-      this.chart.destroy();
-    }
-
-    // Get selected equipment name
-    const selectedEquipmentName = this.equipments.find(e => e.id === this.selectedEquipment)?.equipmentName || 'Unknown Equipment';
-
-    // Get the selected month name
-    const selectedMonthName = this.months.find(m => m.value === this.selectedMonth)?.name || 'Unknown Month';
-
-    this.chart = new Chart('tbfChart', {
-      type: 'bar',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'TBF (%)',
-          data: values,
-          backgroundColor: 'rgba(75, 192, 192, 0.2)',
-          borderColor: 'rgba(75, 192, 192, 1)',
-          borderWidth: 1
-        }]
+  fetchAeroports(){
+    this.aeroportService.getAllAeroports().subscribe({
+      next: data => {
+        console.log('Data received: ', data);
+        this.aeroports = data;
       },
-      options: {
-        plugins: {
-          title: {
-            display: true,
-            text: `TBF Graph for ${selectedEquipmentName} in ${selectedMonthName}`,
-            font: {
-              size: 18
-            }
-          }
-        },
-        scales: {
-          y: {
-            beginAtZero: true
-          },
-          x: {
-            beginAtZero: true,
-            grid: {
-              display: false
-            }
-          }
-        }
+      error: err => {
+        console.log(err);
       }
     });
+  }
+  fetchProjets() {
+    this.projetService.getAllProjets().subscribe(data => {
+      this.projects=data;
+    });
+  }
+  onSubmit(): void {
+    if(this.form.valid){
+      const selectedProjetId = this.form.get('projet')?.value;
+      const selectedAeroportId = this.form.get('aeroport')?.value;
+      const selectedDate = this.form.get('date')?.value;
+      const year =selectedDate.getFullYear();
+      const month=selectedDate.getMonth();
+      console.log('Projet ID:', selectedProjetId);
+      console.log('Aéroport ID:', selectedAeroportId);
+      console.log('Date sélectionnée:', selectedDate);
+      console.log('Year sélectionnée:', year);
+      console.log('Month sélectionnée:', month);
+      this.interventionservice.getTbf(selectedProjetId,month+1,year,selectedAeroportId).subscribe(
+        {
+          next: data => {
+            console.log('TBF : ', data);
+            this.resultTBF=data;
+          },
+          error: err => {
+            console.log(err);
+          }
+        }
+      );
+    }
+
   }
 }

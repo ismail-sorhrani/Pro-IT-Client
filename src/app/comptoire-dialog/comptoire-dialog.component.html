@@ -9,7 +9,7 @@
       <mat-label>zoneName</mat-label>
       <mat-select formControlName="zoneId">
         <mat-option *ngFor="let zone of zones" [value]="zone.id">
-          {{ zone.zoneName }}:{{ zone.aeroportName }}
+          {{ zone.zoneName }}
         </mat-option>
       </mat-select>
     </mat-form-field>

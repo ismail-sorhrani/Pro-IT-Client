@@ -75,4 +75,10 @@ export class TBFDashboardComponent implements OnInit {
     }
 
   }
+  getFormattedResultTBF(): string {
+    if (this.resultTBF !== null) {
+      return (Math.floor(this.resultTBF * 100) / 100).toFixed(2);
+    }
+    return '';
+  }
 }

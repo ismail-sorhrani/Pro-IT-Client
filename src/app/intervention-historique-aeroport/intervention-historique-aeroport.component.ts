@@ -16,7 +16,7 @@ import {ZoneService} from "../services/zone.service";
   styleUrl: './intervention-historique-aeroport.component.css'
 })
 export class InterventionHistoriqueAeroportComponent implements OnInit{
-  displayedColumns: string[] = ['id', 'status', 'date', 'heureDebut', 'heureFin','duration', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme', 'aeroport'];
+  displayedColumns: string[] = ['id', 'date', 'heureDebut', 'heureFin','duration', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme','project', 'aeroport'];
 
   @ViewChild('paginatorFermer') paginatorFermer!: MatPaginator;
   public dataSourceFermer: MatTableDataSource<Interventiion>;
@@ -34,6 +34,7 @@ export class InterventionHistoriqueAeroportComponent implements OnInit{
   selectedtechnicien: AppUser|null=null;
   selectedDate: Date | null = null;
   selectedZone: Zone|null=null;
+  selectedMonth: Date | null = null;
   zones: Zone[]=[];
 
   constructor(
@@ -140,6 +141,15 @@ export class InterventionHistoriqueAeroportComponent implements OnInit{
         new Date(intervention.date).toDateString() === this.selectedDate?.toDateString()
       );
     }
+    if (this.selectedMonth) {
+      filteredData = filteredData.filter(intervention =>{
+          const interventionDate = new Date(intervention.date);
+          const interventionMonth = interventionDate.getMonth();
+          const interventionYear = interventionDate.getFullYear();
+          return interventionMonth === this.selectedMonth?.getMonth() && interventionYear === this.selectedMonth?.getFullYear();
+        }
+      );
+    }
 
     this.dataSourceFermer.data = filteredData;
   }
@@ -149,6 +159,7 @@ export class InterventionHistoriqueAeroportComponent implements OnInit{
     this.selectedComptoire = null;
     this.selectedDate=null;
     this.selectedtechnicien=null;
+    this.selectedMonth=null;
     this.fetchInterventions();
   }
   convertToMinutes(duration: string): number {

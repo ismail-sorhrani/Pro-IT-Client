@@ -27,6 +27,7 @@ export class CompagnieComponent implements OnInit {
   public compagnies!:any;
   public aeroports!:any;
   formCompanieAeroport!:FormGroup;
+  shouldDisplayCard=false;
   constructor(private dialog:MatDialog,
               private compagnieService:CompagnieService,
               private aeroportService:AeroportService,
@@ -84,7 +85,7 @@ export class CompagnieComponent implements OnInit {
   openDialog(compagnie?: any): void {
     const dialogRef = this.dialog.open(CompagnieDialogComponent, {
       data: {
-        title: compagnie ? 'Modifier Compagnie' : 'Ajouter Compagnie',
+        title: compagnie ? 'Update Compagnie' : 'New Compagnie',
         compagnie: compagnie || {}
       }
     });
@@ -96,10 +97,10 @@ export class CompagnieComponent implements OnInit {
     });
   }
   deleteCompagnie(compagnie: any): void {
-    if (confirm(`Voulez-vous vraiment supprimer la compagnie ${compagnie.compagnieName}?`)) {
+    if (confirm(`Do you really want to delete this compagnie ${compagnie.compagnieName}?`)) {
       this.compagnieService.deleteCompagnie(compagnie).subscribe({
         next: () => {
-          this.snackBar.open('compagnie supprimée', 'Fermer', {
+          this.snackBar.open('compagnie deleted', 'Fermer', {
             duration: 3000,
           });
           this.fetchCompagnies();

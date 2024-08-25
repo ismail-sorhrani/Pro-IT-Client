@@ -1,4 +1,4 @@
-<h4 mat-dialog-title>{{data.id ? 'Modifier' : 'Ajouter'}} Solution</h4>
+<h4 mat-dialog-title>{{data.id ? 'Update' : 'New'}} Solution</h4>
 <div mat-dialog-content>
   <form [formGroup]="solutionForm">
     <mat-form-field>
@@ -8,6 +8,6 @@
   </form>
 </div>
 <div mat-dialog-actions>
-  <button class="btn btn-outline-danger" (click)="onNoClick()">Annuler</button>
-  <button class="btn btn-outline-success"  (click)="onSubmit()" cdkFocusInitial>Enregistrer</button>
+  <button class="btn btn-outline-danger" (click)="onNoClick()">Cancel</button>
+  <button class="btn btn-outline-success"  (click)="onSubmit()" cdkFocusInitial>Save</button>
 </div>

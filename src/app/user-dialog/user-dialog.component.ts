@@ -38,7 +38,7 @@ export class UserDialogComponent {
       lastname: [this.data.isEdit ? this.data.user.lastname : '', this.data.isEdit ? [] : Validators.required],
       username: [this.data.isEdit ? this.data.user.username : '', this.data.isEdit ? [] : Validators.required],
       roles: [this.data.isEdit ? this.data.user.roles : [], this.data.isEdit ? [] : Validators.required],
-      aeroport: [this.data.isEdit ? this.data.user.aeroport1 : '', this.data.isEdit ? [] : Validators.required],
+      aeroport: [this.data.isEdit ? this.data.user.aeroport : '', this.data.isEdit ? [] : Validators.required],
       password: ['',Validators.required]  // Facultatif pour édition
     });
 
@@ -68,7 +68,7 @@ export class UserDialogComponent {
           password: this.userForm.value.password,
           roles: this.userForm.value.roles,
           interventions:[],
-          aeroport1: { id: this.userForm.value.aeroport.id }
+          aeroport: { id: this.userForm.value.aeroport.id }
         };
         this.userService.updateUser(editUser).subscribe({
           next: (response) => {
@@ -97,7 +97,7 @@ export class UserDialogComponent {
           password: this.userForm.value.password,
           roles: this.userForm.value.roles,
           interventions:[],
-          aeroport1: { id: this.userForm.value.aeroport.id }
+          aeroport: { id: this.userForm.value.aeroport.id }
         };
 
         this.userService.addUser(newUser).subscribe({

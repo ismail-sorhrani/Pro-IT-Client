@@ -60,7 +60,7 @@ export interface Projet{
 export interface Interventiion {
   id: number;
   status: string;
-  date: string;
+  date: Date;
   heureDebut: Date;
   heureFin: Date;
   compagnie: Compagnie;

@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import {Component, ElementRef, ViewChild} from '@angular/core';
 import {Chart, ChartDataset, ChartOptions, ChartType, registerables} from "chart.js";
 import {InterventionService} from "../services/intervention.service";
 import {DatePipe} from "@angular/common";
 import ChartDataLabels from "chartjs-plugin-datalabels";
 import {MatDatepickerInputEvent} from "@angular/material/datepicker";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AeroportService} from "../services/aeroport.service";
 
 @Component({
   selector: 'app-interventions-by-projet',
@@ -11,6 +13,9 @@ import {MatDatepickerInputEvent} from "@angular/material/datepicker";
   styleUrl: './interventions-by-projet.component.css'
 })
 export class InterventionsByProjetComponent {
+  @ViewChild('projetChartCanvas') projetChartCanvas!: ElementRef<HTMLCanvasElement>;
+  aeroports!: any[];
+  form: FormGroup;
   public pieChartOptions: ChartOptions<'pie'> = {
     responsive: true,
     plugins: {
@@ -19,7 +24,7 @@ export class InterventionsByProjetComponent {
       },
       title: {
         display: true,
-        text: 'Répartition des interventions par problème pour le mois sélectionné'
+        text: 'Distribution of interventions by project for the selected month'
       },
       tooltip: {
         callbacks: {
@@ -62,72 +67,29 @@ export class InterventionsByProjetComponent {
 
   selectedDate: Date | null = null;
 
-  constructor(private interventionService: InterventionService, private datePipe: DatePipe) {
+  constructor(private interventionService: InterventionService,
+              private datePipe: DatePipe,
+              private aeroportService:AeroportService,
+              private fb: FormBuilder
+  ) {
     Chart.register(...registerables);
     Chart.register(ChartDataLabels); // Enregistrez le plugin ChartDataLabels
+    this.form = this.fb.group({
+      aeroport: ['',Validators.required],
+      date: ['',Validators.required]
+    });
 
   }
 
   ngOnInit(): void {
-    this.loadChartData();
-  }
-
-  onDateChange(event: MatDatepickerInputEvent<Date>): void {
-    this.selectedDate = event.value;
-    this.loadChartData();
-  }
-
-  private loadChartData(): void {
-    this.interventionService.getAllInterventiiions().subscribe(data => {
-      const projetMap = new Map<string, number>();
-      const colors: string[] = [];
-      let totalInterventions = 0;
-
-      data.forEach((intervention: any) => {
-        const interventionDate = new Date(intervention.date);
-        const month = interventionDate.getMonth();
-        const year = interventionDate.getFullYear();
-
-        if (this.selectedDate) {
-          const selectedMonth = this.selectedDate.getMonth();
-          const selectedYear = this.selectedDate.getFullYear();
-          if (month !== selectedMonth || year !== selectedYear) {
-            return;
-          }
-        }
-
-        if (intervention.projet && intervention.projet?.projetName) {
-          const projetName = intervention.projet.projetName;
-          if (!projetMap.has(projetName)) {
-            projetMap.set(projetName, 0);
-            colors.push(this.getRandomColor());
-          }
-          projetMap.set(projetName, projetMap.get(projetName)! + 1);
-          totalInterventions++;
-        }
-      });
-
-      if (totalInterventions > 0) {
-        this.pieChartLabels = Array.from(projetMap.keys());
-        this.pieChartData = [
-          {
-            data: Array.from(projetMap.values()).map(count => (count / totalInterventions) * 100),
-            label: 'Interventions',
-            backgroundColor: colors
-          }
-        ];
-      } else {
-        this.pieChartLabels = [];
-        this.pieChartData = [
-          {
-            data: [],
-            label: 'Interventions',
-            backgroundColor: []
-          }
-        ];
-      }
+    this.aeroportService.getAllAeroports().subscribe((data: any[]) => {
+      this.aeroports = data;
     });
   }
+
+
+
+
 
   private getRandomColor(): string {
     const letters = '0123456789ABCDEF';
@@ -137,5 +99,83 @@ export class InterventionsByProjetComponent {
     }
     return color;
   }
+  downloadChart(): void {
+    const canvas = this.projetChartCanvas.nativeElement;
+    const ctx = canvas.getContext('2d');
+    ctx!.save();
+    ctx!.globalCompositeOperation = 'destination-over';
+    ctx!.fillStyle = '#FFFFFF';
+    ctx!.fillRect(0, 0, canvas.width, canvas.height);
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png', 1.0);
+    link.download = 'equipment-chart.png';
+    link.click();
+    ctx!.restore();
+  }
 
+  onSubmit() {
+    if (this.form.valid){
+      this.selectedDate=this.form.get('date')?.value;
+      const selectedAeroport=this.form.get('aeroport')?.value;
+      this.interventionService.getInterventionsByAiroport(selectedAeroport).subscribe(data => {
+        const projetMap = new Map<string, number>();
+        const colors: string[] = [];
+        let totalInterventions = 0;
+
+        data.forEach((intervention: any) => {
+          const interventionDate = new Date(intervention.date);
+          const month = interventionDate.getMonth();
+          const year = interventionDate.getFullYear();
+
+          if (this.selectedDate) {
+            const selectedMonth = this.selectedDate.getMonth();
+            const selectedYear = this.selectedDate.getFullYear();
+            if (month !== selectedMonth || year !== selectedYear) {
+              return;
+            }
+          }
+
+          if (intervention.projet && intervention.projet?.projetName) {
+            const projetName = intervention.projet.projetName;
+            if (!projetMap.has(projetName)) {
+              projetMap.set(projetName, 0);
+              colors.push(this.getRandomColor());
+            }
+            projetMap.set(projetName, projetMap.get(projetName)! + 1);
+            totalInterventions++;
+          }
+        });
+        let moiis:number=1;
+        if (this.selectedDate) {
+          const mois = this.selectedDate.getMonth();
+          moiis+=mois;
+        }
+
+        if (totalInterventions > 0) {
+          this.pieChartOptions.plugins!.title!.text = `Distribution of interventions by project for :
+       ${moiis} / ${this.selectedDate?.getFullYear()}`;
+          this.pieChartLabels = Array.from(projetMap.keys());
+          this.pieChartData = [
+            {
+              data: Array.from(projetMap.values()).map(count => (count / totalInterventions) * 100),
+              label: 'Interventions',
+              backgroundColor: colors
+            }
+          ];
+
+
+
+        } else {
+          this.pieChartLabels = [];
+          this.pieChartData = [
+            {
+              data: [],
+              label: 'Interventions',
+              backgroundColor: []
+            }
+          ];
+        }
+      });
+    }
+  }
 }

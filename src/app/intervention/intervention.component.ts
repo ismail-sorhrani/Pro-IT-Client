@@ -170,7 +170,7 @@ export class InterventionComponent implements OnInit {
   openDialog(intervention?: any): void {
     if(this.isTechnicien){
       const dialogRef = this.dialog.open(InterventionDialogComponent, {data: {
-        title: intervention ? 'Modifier Intervention' : 'Ajouter Intervention',
+        title: intervention ? 'Update Intervention' : 'New Intervention',
         intervention: intervention || {}
       }
     });
@@ -181,7 +181,7 @@ export class InterventionComponent implements OnInit {
     });
     }else{
       const dialogRef = this.dialog.open(InterventionDialogHelpComponent, {data: {
-        title: intervention ? 'Modifier Intervention' : 'Ajouter Intervention',
+        title: intervention ? 'Update Intervention' : 'New Intervention',
         intervention: intervention || {}
       }
     });
@@ -207,7 +207,7 @@ export class InterventionComponent implements OnInit {
     console.log("Open element ",intervention);
     const dialogRef = this.dialog.open(InterventionFinComponent, {
       data: {
-        title: 'Terminer Intervention',
+        title: 'Complete Intervention',
         intervention: intervention
       }
 

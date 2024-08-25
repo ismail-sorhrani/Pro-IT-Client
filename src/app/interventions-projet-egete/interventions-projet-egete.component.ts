@@ -1,39 +1,36 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {Chart, ChartDataset, ChartOptions, ChartType, registerables} from "chart.js";
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Chart, ChartDataset, ChartOptions, registerables} from "chart.js";
+import {Interventiion} from "../models/model/intervention.model";
 import {InterventionService} from "../services/intervention.service";
 import {DatePipe} from "@angular/common";
-import {Interventiion} from "../models/model/intervention.model";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {AeroportService} from "../services/aeroport.service";
 
 @Component({
-  selector: 'app-interventions-by-projet-year',
-  templateUrl: './interventions-by-projet-year.component.html',
-  styleUrl: './interventions-by-projet-year.component.css'
+  selector: 'app-interventions-projet-egete',
+  templateUrl: './interventions-projet-egete.component.html',
+  styleUrl: './interventions-projet-egete.component.css'
 })
-export class InterventionsByProjetYearComponent {
+export class InterventionsProjetEgeteComponent implements OnInit{
   @ViewChild('projetYearChartCanvas') projetYearChartCanvas!: ElementRef<HTMLCanvasElement>;
   aeroports!: any[];
   form: FormGroup;
-  public dateselected=new Date();
   public barChartOptions: ChartOptions = {
     responsive: true,
     plugins: {
       title: {
         display: true,
         text: '\n' +
-          'the number of incidents by equipment for BRS and CUTE in : '
+          'the number of incidents by equipment for E-GATE in : '
       }
     }
   };
-  public barChartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   public barChartLegend = true;
-
+  public barChartLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   public barChartData: ChartDataset[] = [
     { data: [], label: 'Interventions' }
   ];
 
-  private allInterventions: Interventiion[] = [];
 
   constructor(
     private interventionService: InterventionService,
@@ -47,11 +44,6 @@ export class InterventionsByProjetYearComponent {
       date: ['',Validators.required]
     });
   }
-  private formatDate(date: Date): string {
-    const datePipe = new DatePipe('en-US');
-    return datePipe.transform(date, 'yyyy-MM-dd') || '';
-  }
-
   ngOnInit(): void {
     this.aeroportService.getAllAeroports().subscribe((data: any[]) => {
       this.aeroports = data;
@@ -86,7 +78,7 @@ export class InterventionsByProjetYearComponent {
     const selectedYear = date.getFullYear();
     const projetMap = new Map<string, number[]>();
 
-    this.interventionService.getInterventionsByAiroportAndProjet(selectedAeroport).subscribe({
+    this.interventionService.getInterventionsByAiroportAndProjetEGate(selectedAeroport).subscribe({
       next: (interventions: Interventiion[]) => {
         interventions.forEach((intervention) => {
           const interventionDate = new Date(intervention.date);
@@ -113,6 +105,7 @@ export class InterventionsByProjetYearComponent {
 
   private updateChart(year: number, projetMap: Map<string, number[]>) {
     this.barChartData = Array.from(projetMap, ([label, data]) => ({ data, label }));
-    this.barChartOptions.plugins!.title!.text = `The number of incidents by equipment for BRS And CUTE in: ${year}`;
+    this.barChartOptions.plugins!.title!.text = `The number of incidents by equipment for E-GATE in: ${year}`;
   }
+
 }

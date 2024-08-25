@@ -4,16 +4,16 @@
     <mat-card-subtitle>A list of all the zone.</mat-card-subtitle>
     <mat-card-actions>
       <button (click)="openDialog()" class="btn btn-outline-primary">
-        <mat-icon>person_add</mat-icon>
-        Ajouter
+        <mat-icon>add</mat-icon>
+        New zone
       </button>
     </mat-card-actions>
   </mat-card-header>
   <mat-card-content>
     <div class="table-container">
       <mat-form-field appearance="outline">
-        <mat-label>Rechercher</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher dans les zones">
+        <mat-label>Search</mat-label>
+        <input matInput (keyup)="applyFilter($event)" placeholder="Search in zones">
       </mat-form-field>
       <table mat-table [dataSource]="dataSource"  class="mat-elevation-z8">
 

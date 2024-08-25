@@ -71,6 +71,7 @@ import {DatePipe} from "@angular/common";
 import { InterventionsByProjetComponent } from './interventions-by-projet/interventions-by-projet.component';
 import { InterventionsByProjetYearComponent } from './interventions-by-projet-year/interventions-by-projet-year.component';
 import { TbfChartComponent } from './tbf-chart/tbf-chart.component';
+import { InterventionsProjetEgeteComponent } from './interventions-projet-egete/interventions-projet-egete.component';
 
 @NgModule({
   declarations: [
@@ -114,7 +115,8 @@ import { TbfChartComponent } from './tbf-chart/tbf-chart.component';
     ProjetDialogComponent,
     InterventionsByProjetComponent,
     InterventionsByProjetYearComponent,
-    TbfChartComponent
+    TbfChartComponent,
+    InterventionsProjetEgeteComponent
   ],
   imports: [
     FormsModule,

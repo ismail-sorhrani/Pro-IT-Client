@@ -39,6 +39,12 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker></mat-datepicker>
           </mat-form-field>
+          <mat-form-field appearance="outline" class="filter-field">
+            <mat-label>Month</mat-label>
+            <input matInput [matDatepicker]="picker1" [(ngModel)]="selectedMonth" (dateChange)="applyFilter()">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+          </mat-form-field>
           <button mat-raised-button color="primary" (click)="clearFilter()">Annuler le filtre</button>
           <table mat-table [dataSource]="dataSourceFermer" class="mat-elevation-z8 styled-table">
 
@@ -48,18 +54,13 @@
               <td mat-cell *matCellDef="let element"> {{element.id}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef> Status </th>
-              <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-            </ng-container>
-
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef> Date </th>
               <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>
             </ng-container>
 
             <ng-container matColumnDef="heureDebut">
-              <th mat-header-cell *matHeaderCellDef> Heure Debut </th>
+              <th mat-header-cell *matHeaderCellDef> Start Time </th>
               <td mat-cell *matCellDef="let element"> {{element.heureDebut | date:'shortTime'}} </td>
             </ng-container>
             <ng-container matColumnDef="duration">
@@ -68,7 +69,7 @@
             </ng-container>
 
             <ng-container matColumnDef="heureFin">
-              <th mat-header-cell *matHeaderCellDef> Heure Fin </th>
+              <th mat-header-cell *matHeaderCellDef> End Time </th>
               <td mat-cell *matCellDef="let element"> {{element.heureFin | date:'shortTime'}} </td>
             </ng-container>
 
@@ -78,7 +79,7 @@
             </ng-container>
 
             <ng-container matColumnDef="appUser">
-              <th mat-header-cell *matHeaderCellDef> Username </th>
+              <th mat-header-cell *matHeaderCellDef> Technician </th>
               <td mat-cell *matCellDef="let element"> {{element.appUser?.username || 'N/A'}} </td>
             </ng-container>
 
@@ -100,12 +101,16 @@
             </ng-container>
 
             <ng-container matColumnDef="probleme">
-              <th mat-header-cell *matHeaderCellDef> Probleme </th>
+              <th mat-header-cell *matHeaderCellDef> Problem </th>
               <td mat-cell *matCellDef="let element"> {{element.probleme?.libelle || '--'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="project">
+              <th mat-header-cell *matHeaderCellDef> Project </th>
+              <td mat-cell *matCellDef="let element"> {{element.projet?.projetName || '--'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="aeroport">
-              <th mat-header-cell *matHeaderCellDef> Aeroport </th>
+              <th mat-header-cell *matHeaderCellDef> Airport </th>
               <td mat-cell *matCellDef="let element"> {{element.aeroport?.aeroportName || 'N/A'}} </td>
             </ng-container>
 

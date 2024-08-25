@@ -50,7 +50,7 @@ export class ZoneComponent implements OnInit{
   openDialog(zone?: any): void {
     const dialogRef = this.dialog.open(ZoneDialogComponent, {
       data: {
-        title: zone ? 'Modifier Zone' : 'Ajouter Zone',
+        title: zone ? 'Update Zone' : 'New Zone',
         zone: zone || {}
       }
     });
@@ -63,10 +63,10 @@ export class ZoneComponent implements OnInit{
   }
 
   deleteZone(zone: any): void {
-    if (confirm(`Voulez-vous vraiment supprimer la zone ${zone.zoneName}?`)) {
+    if (confirm(`o you really want to delete this zone : ${zone.zoneName}?`)) {
       this.zoneService.deleteZone(zone).subscribe({
         next: () => {
-          this.snackBar.open('Zone supprimée', 'Fermer', {
+          this.snackBar.open('Zone deleted', 'Fermer', {
             duration: 3000,
           });
           this.fetchZones();

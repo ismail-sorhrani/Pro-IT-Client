@@ -18,17 +18,12 @@
     <button class=" btn btn-outline-primary" (click)="downloadChart()">Download</button>
   </form>
 </div>
-
-<div class="chart-container">
-  <canvas baseChart #projetChartCanvas
-          [datasets]="pieChartData"
-          [labels]="pieChartLabels"
-          [options]="pieChartOptions"
-          [legend]="pieChartLegend"
-          type="pie"
+<div style="display: block;">
+  <canvas baseChart #projetYearChartCanvas
+          [datasets]="barChartData"
+          [labels]="barChartLabels"
+          [options]="barChartOptions"
+          [legend]="barChartLegend"
   >
   </canvas>
 </div>
-
-
-

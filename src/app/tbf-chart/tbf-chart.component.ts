@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {Projet} from "../models/model/model.module";
 import {InterventionService} from "../services/intervention.service";
@@ -12,6 +12,8 @@ import {ChartDataset, ChartOptions, ChartType} from "chart.js";
   styleUrl: './tbf-chart.component.css'
 })
 export class TbfChartComponent implements OnInit{
+  public selectedYear: number = new Date().getFullYear();
+  @ViewChild('tbfChartCanvas') tbfChartCanvas!: ElementRef<HTMLCanvasElement>;
   form: FormGroup;
   public aeroports!:any;
   public projects!: Projet[];
@@ -25,7 +27,7 @@ export class TbfChartComponent implements OnInit{
       },
       title: {
         display: true,
-        text: 'TBF par mois pour l\'année sélectionnée'
+        text: `TBF by month for the selected year`
       }
     },
     scales: {
@@ -81,9 +83,31 @@ export class TbfChartComponent implements OnInit{
       console.log('Date sélectionnée:', selectedDate);
       console.log('Year sélectionnée:', year);
       console.log('Month sélectionnée:', month);
+      this.tbfChartOptions.plugins!.title!.text = `TBF by month for the selected year : ${year}`;
       this.interventionservice.getTbfYear(selectedProjetId, year, selectedAeroportId).subscribe(data => {
         this.tbfChartData = [{ data: Object.values(data), label: 'TBF' }];
       });
     }
+  }
+  downloadChart(): void {
+    const canvas = this.tbfChartCanvas.nativeElement;
+    const ctx = canvas.getContext('2d');
+
+    // Sauvegarde du contexte actuel
+    ctx!.save();
+
+    // Dessiner un rectangle blanc de la taille du canvas
+    ctx!.globalCompositeOperation = 'destination-over'; // Pour dessiner derrière les éléments existants
+    ctx!.fillStyle = '#FFFFFF'; // Couleur blanche
+    ctx!.fillRect(0, 0, canvas.width, canvas.height);
+
+    // Convertir en image et télécharger
+    const link = document.createElement('a');
+    link.href = canvas.toDataURL('image/png', 1.0);
+    link.download = 'tbf-chart.png';
+    link.click();
+
+    // Restaurer le contexte original
+    ctx!.restore();
   }
 }

@@ -44,7 +44,7 @@ export class ComptoireComponent implements OnInit{
   openDialog(comptoire?: any): void {
     const dialogRef = this.dialog.open(ComptoireDialogComponent, {
       data: {
-        title: comptoire ? 'Modifier Comptoire' : 'Ajouter Comptoire',
+        title: comptoire ? 'Update Comptoire' : 'New Comptoire',
         comptoire: comptoire || {}
       }
     });
@@ -57,10 +57,10 @@ export class ComptoireComponent implements OnInit{
   }
 
   deleteComptoire(comptoire: any): void {
-    if (confirm(`Voulez-vous vraiment supprimer la zone ${comptoire.zoneName}?`)) {
+    if (confirm(`Do you really want to delete this Comptoire ${comptoire.zoneName}?`)) {
       this.comptoireService.deleteComptoire(comptoire).subscribe({
         next: () => {
-          this.snackBar.open('Comptoire supprimée', 'Fermer', {
+          this.snackBar.open('Comptoire deleted', 'Fermer', {
             duration: 3000,
           });
           this.fetchComptoires();

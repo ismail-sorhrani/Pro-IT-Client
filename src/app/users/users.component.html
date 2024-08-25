@@ -3,9 +3,9 @@
     <mat-card-title>Users</mat-card-title>
     <mat-card-subtitle>A list of all users.</mat-card-subtitle>
     <mat-card-actions>
-      <button mat-raised-button color="primary" (click)="openAddUserDialog()">
+      <button class="btn btn-outline-primary" (click)="openAddUserDialog()">
         <mat-icon>person_add</mat-icon>
-        Ajouter
+        New User
       </button>
     </mat-card-actions>
   </mat-card-header>
@@ -13,7 +13,7 @@
     <div class="table-container">
       <mat-form-field appearance="outline">
         <mat-label>Rechercher</mat-label>
-        <input matInput (keyup)="applyFilter($event)" placeholder="Rechercher dans les utilisateurs">
+        <input matInput (keyup)="applyFilter($event)" placeholder="Search in users">
       </mat-form-field>
       <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
 

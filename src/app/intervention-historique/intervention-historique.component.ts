@@ -18,7 +18,7 @@ import {ZoneService} from "../services/zone.service";
   styleUrl: './intervention-historique.component.css'
 })
 export class InterventionHistoriqueComponent implements OnInit {
-  displayedColumns: string[] = ['id', 'status', 'date', 'heureDebut', 'heureFin', 'duration', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme', 'aeroport'];
+  displayedColumns: string[] = ['id', 'date', 'heureDebut', 'heureFin', 'duration', 'compagnie', 'appUser', 'comptoire', 'equipment', 'solution', 'probleme','projet', 'aeroport'];
 
   @ViewChild('paginatorFermer') paginatorFermer!: MatPaginator;
 
@@ -39,6 +39,7 @@ export class InterventionHistoriqueComponent implements OnInit {
   techniciens: any[]=[];
   selectedtechnicien: AppUser|null=null;
   selectedDate: Date | null = null;
+  selectedMonth: Date | null = null;
   zones!: Zone[];
   selectedZone: Zone| null = null;
 
@@ -176,6 +177,15 @@ export class InterventionHistoriqueComponent implements OnInit {
         new Date(intervention.date).toDateString() === this.selectedDate?.toDateString()
       );
     }
+    if (this.selectedMonth) {
+      filteredData = filteredData.filter(intervention =>{
+          const interventionDate = new Date(intervention.date);
+          const interventionMonth = interventionDate.getMonth();
+          const interventionYear = interventionDate.getFullYear();
+          return interventionMonth === this.selectedMonth?.getMonth() && interventionYear === this.selectedMonth?.getFullYear();
+        }
+      );
+    }
 
     this.dataSourceFermer.data = filteredData;
   }
@@ -190,7 +200,9 @@ export class InterventionHistoriqueComponent implements OnInit {
     this.selectedComptoire = null;
     this.selectedAeroport=null;
     this.selectedDate=null;
+    this.selectedMonth=null;
     this.selectedtechnicien=null;
+    this.selectedZone=null;
     this.fetchInterventions();
   }
   convertToMinutes(duration: string): number {
@@ -211,5 +223,56 @@ export class InterventionHistoriqueComponent implements OnInit {
     this.zoneService.getAllZones().subscribe(data => {
       this.zones=data;
     });
+  }
+  // Download Table
+  downloadTable(): void {
+    const csvData = this.convertToCSV(this.dataSourceFermer.data);
+    const blob = new Blob([csvData], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', 'interventions.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  convertToCSV(data: Interventiion[]): string {
+    const header = this.displayedColumns.join(',');
+    const rows = data.map(intervention =>
+      this.displayedColumns.map(col => this.getValue(intervention, col)).join(',')
+    );
+    return [header, ...rows].join('\n');
+  }
+
+  getValue(intervention: Interventiion, column: string): string {
+    switch (column) {
+      case 'date':
+        return intervention.date ? new Date(intervention.date).toLocaleDateString() : '';
+      case 'heureDebut':
+        return intervention.heureDebut ? new Date(intervention.heureDebut).toLocaleTimeString() : '';
+      case 'heureFin':
+        return intervention.heureFin ? new Date(intervention.heureFin).toLocaleTimeString() : '';
+      case 'duration':
+        return intervention.duration || '';
+      case 'compagnie':
+        return intervention.compagnie?.compagnieName || 'N/A';
+      case 'technician':
+        return intervention.appUser?.username || 'N/A';
+      case 'comptoire':
+        return intervention.comptoire ? `${intervention.comptoire.comptoireName} : ${intervention.comptoire.zone.zoneName}` : 'N/A';
+      case 'equipment':
+        return intervention.equipment?.equipementName || '--';
+      case 'solution':
+        return intervention.solution?.libelle || '--';
+      case 'probleme':
+        return intervention.probleme?.libelle || '--';
+      case 'projet':
+        return intervention.projet?.projetName || '--';
+      case 'aeroport':
+        return intervention.aeroport?.aeroportName || 'N/A';
+      default:
+        return '';
+    }
   }
 }

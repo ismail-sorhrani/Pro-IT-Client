@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>{{data.isEdit ? 'Edit User' : 'Add User'}}</h1>
+<h1 mat-dialog-title>{{data.isEdit ? 'Edit User' : 'New User'}}</h1>
 <mat-dialog-content>
   <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline">
@@ -24,7 +24,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline">
-      <mat-label>Aeroport</mat-label>
+      <mat-label>Airport</mat-label>
       <mat-select formControlName="aeroport">
         <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport">
           {{ aeroport.aeroportName }}

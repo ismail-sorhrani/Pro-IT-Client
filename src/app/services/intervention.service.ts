@@ -220,7 +220,15 @@ export class InterventionService {
     return this.http.get<any>(`${this.baseUrl3}/interventions/by-problem-and-month`
     );
   }
-
+  getInterventionsByAiroport(aeroportId:number){
+    return this.http.get<any>(`${this.baseUrl3}/interventions/aeroport`,
+      {
+        params:{
+          aeroportId
+        }
+      }
+    );
+  }
 
 
   getTbf(projetId: number, month: number, year: number, aeroportId: number) :Observable<any>{
@@ -242,6 +250,25 @@ export class InterventionService {
       {
         params: { projetId,
           year,
+          aeroportId
+        }
+      }
+    );
+  }
+
+  getInterventionsByAiroportAndProjet(aeroportId:number){
+    return this.http.get<any>(`${this.baseUrl3}/interventions/aeroport/projet`,
+      {
+        params:{
+          aeroportId
+        }
+      }
+    );
+  }
+  getInterventionsByAiroportAndProjetEGate(aeroportId:number){
+    return this.http.get<any>(`${this.baseUrl3}/interventions/aeroport/projet/egate`,
+      {
+        params:{
           aeroportId
         }
       }

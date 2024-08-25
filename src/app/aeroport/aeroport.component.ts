@@ -46,7 +46,7 @@ export class AeroportComponent implements OnInit{
   openDialog(aeroport?: any): void {
     const dialogRef = this.dialog.open(AeroportDialogComponent, {
       data: {
-        title: aeroport ? 'Modifier Aeroport' : 'Ajouter Aeroport',
+        title: aeroport ? 'Update Airport' : 'New Airport',
         aeroport: aeroport || {}
       }
     });
@@ -58,10 +58,10 @@ export class AeroportComponent implements OnInit{
     });
   }
   deleteAeroport(aeroport: any): void {
-    if (confirm(`Voulez-vous vraiment supprimer l'Aeroport ${aeroport.aeroportName}?`)) {
+    if (confirm(`Do you really want to delete this Airport? ${aeroport.aeroportName}?`)) {
       this.aeroportService.deleteAeroport(aeroport).subscribe({
         next: () => {
-          this.snackBar.open('Aeroport supprimée', 'Fermer', {
+          this.snackBar.open('Airport deleted', 'Close', {
             duration: 3000,
           });
           this.fetchAeroports();

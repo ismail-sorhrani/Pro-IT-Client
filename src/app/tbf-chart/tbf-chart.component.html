@@ -1,7 +1,7 @@
 <mat-card class="chart-card">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Projet</mat-label>
+      <mat-label>Project</mat-label>
       <mat-select formControlName="projet">
         <mat-option *ngFor="let projet of projects" [value]="projet.id">
           {{ projet.projetName }}
@@ -10,15 +10,15 @@
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Aéroport</mat-label>
+      <mat-label>Airport</mat-label>
       <mat-select  formControlName="aeroport">
         <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport.id">
           {{ aeroport.aeroportName }}
         </mat-option>
       </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="fill" class="full-width">
-      <mat-label>Choisissez une date</mat-label>
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Choose a date</mat-label>
       <input matInput [matDatepicker]="picker" formControlName="date">
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker
@@ -27,14 +27,17 @@
     </mat-form-field>
 
     <button class=" btn btn-outline-primary" type="submit">Submit</button>
+    <button class=" btn btn-outline-primary" (click)="downloadChart()">Download</button>
   </form>
+
 </mat-card>
 <div class="chart-container">
-  <canvas baseChart
+  <canvas #tbfChartCanvas baseChart
           [datasets]="tbfChartData"
           [labels]="tbfChartLabels"
           [options]="tbfChartOptions"
           type="polarArea">
   </canvas>
 </div>
+
 

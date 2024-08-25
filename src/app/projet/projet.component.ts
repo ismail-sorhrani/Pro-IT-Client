@@ -124,7 +124,7 @@ export class ProjetComponent implements OnInit{
   }
 
   removeEquipmentFromProjet() {
-    console.log("data",this.formProjetEquipment.value);
+    console.log("data Form: ",this.formProjetEquipment.value);
     this.projetService.removeEquipmentFromProjet(this.formProjetEquipment.value.projectName,
       this.formProjetEquipment.value.eqipmentId).subscribe({
       next:value => {

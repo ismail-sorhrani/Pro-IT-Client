@@ -6,9 +6,9 @@
 
       <mat-card-content>
         <div class="table-container">
-
+          <div>
           <mat-form-field appearance="outline" class="filter-field" *ngIf="isAdmin || isHelpdesk">
-            <mat-label>Aeroports</mat-label>
+            <mat-label>Airports</mat-label>
             <mat-select [(ngModel)]="selectedAeroport" (selectionChange)="applyFilter()">
               <mat-option *ngFor="let aeroport of aeroports" [value]="aeroport">
                 {{aeroport.aeroportName}}
@@ -17,7 +17,7 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline" class="filter-field">
-            <mat-label>Durée</mat-label>
+            <mat-label>Duration</mat-label>
             <mat-select [(ngModel)]="selectedDuration" (selectionChange)="applyFilter()">
               <mat-option *ngFor="let option of durationOptions" [value]="option">{{option}}</mat-option>
             </mat-select>
@@ -36,25 +36,31 @@
               <mat-option *ngFor="let comptoire of comptoires" [value]="comptoire">{{comptoire.comptoireName}}</mat-option>
             </mat-select>
           </mat-form-field>
-          <mat-form-field appearance="outline" class="filter-field" *ngIf="isAdmin || isHelpdesk">
-            <mat-label>Technicien</mat-label>
-            <mat-select [(ngModel)]="selectedtechnicien" (selectionChange)="applyFilter()">
-              <mat-option *ngFor="let technicien of techniciens" [value]="technicien">
-                {{technicien.username}} : {{technicien.aeroport.aeroportName}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <button mat-raised-button color="primary" (click)="clearFilter()">Annuler le filtre</button>
-          <mat-form-field appearance="outline" class="filter-field">
-            <mat-label>Date</mat-label>
-            <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="applyFilter()">
-            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-          </mat-form-field>
-
-
-
-
+          </div>
+          <div>
+            <mat-form-field appearance="outline" class="filter-field" *ngIf="isAdmin || isHelpdesk">
+              <mat-label>Technician</mat-label>
+              <mat-select [(ngModel)]="selectedtechnicien" (selectionChange)="applyFilter()">
+                <mat-option *ngFor="let technicien of techniciens" [value]="technicien">
+                  {{technicien.username}} : {{technicien.aeroport.aeroportName}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Date</mat-label>
+              <input matInput [matDatepicker]="picker" [(ngModel)]="selectedDate" (dateChange)="applyFilter()">
+              <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+              <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+            <mat-form-field appearance="outline" class="filter-field">
+              <mat-label>Month</mat-label>
+              <input matInput [matDatepicker]="picker1" [(ngModel)]="selectedMonth" (dateChange)="applyFilter()">
+              <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+              <mat-datepicker #picker1></mat-datepicker>
+            </mat-form-field>
+            <button style="margin-left: 7%" class="btn btn-outline-primary" (click)="clearFilter()">Cancel</button>
+          </div>
+          <button *ngIf="isAdmin || isHelpdesk" style="margin-bottom: 4%" class="btn btn-outline-success" (click)="downloadTable()">Download</button>
 
 <!--          <button mat-raised-button color="primary" (click)="clearFilter()">Annuler le filtre</button>-->
 
@@ -67,23 +73,18 @@
               <td mat-cell *matCellDef="let element"> {{element.id}} </td>
             </ng-container>
 
-            <ng-container matColumnDef="status">
-              <th mat-header-cell *matHeaderCellDef> Status </th>
-              <td mat-cell *matCellDef="let element"> {{element.status}} </td>
-            </ng-container>
-
             <ng-container matColumnDef="date">
               <th mat-header-cell *matHeaderCellDef> Date </th>
               <td mat-cell *matCellDef="let element"> {{element.date | date}} </td>
             </ng-container>
 
             <ng-container matColumnDef="heureDebut">
-              <th mat-header-cell *matHeaderCellDef> Heure Debut </th>
+              <th mat-header-cell *matHeaderCellDef> Start Time </th>
               <td mat-cell *matCellDef="let element"> {{element.heureDebut | date:'shortTime'}} </td>
             </ng-container>
 
             <ng-container matColumnDef="heureFin">
-              <th mat-header-cell *matHeaderCellDef> Heure Fin </th>
+              <th mat-header-cell *matHeaderCellDef> End Time </th>
               <td mat-cell *matCellDef="let element"> {{element.heureFin | date:'shortTime'}} </td>
             </ng-container>
             <ng-container matColumnDef="duration">
@@ -97,7 +98,7 @@
             </ng-container>
 
             <ng-container matColumnDef="appUser">
-              <th mat-header-cell *matHeaderCellDef> Username </th>
+              <th mat-header-cell *matHeaderCellDef> Technician </th>
               <td mat-cell *matCellDef="let element"> {{element.appUser?.username || 'N/A'}} </td>
             </ng-container>
 
@@ -119,12 +120,17 @@
             </ng-container>
 
             <ng-container matColumnDef="probleme">
-              <th mat-header-cell *matHeaderCellDef> Probleme </th>
+              <th mat-header-cell *matHeaderCellDef> Problem </th>
               <td mat-cell *matCellDef="let element"> {{element.probleme?.libelle || '--'}} </td>
             </ng-container>
 
+            <ng-container matColumnDef="projet">
+              <th mat-header-cell *matHeaderCellDef> Project </th>
+              <td mat-cell *matCellDef="let element"> {{element.projet?.projetName || '--'}} </td>
+            </ng-container>
+
             <ng-container matColumnDef="aeroport">
-              <th mat-header-cell *matHeaderCellDef> Aeroport </th>
+              <th mat-header-cell *matHeaderCellDef> Airport </th>
               <td mat-cell *matCellDef="let element"> {{element.aeroport?.aeroportName || 'N/A'}} </td>
             </ng-container>
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

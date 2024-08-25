@@ -52,10 +52,10 @@ export class EquipmentComponent implements OnInit{
   }
 
   deleteEquipment(equipment: any): void {
-    if (confirm(`Voulez-vous vraiment supprimer l'equipment ${equipment.equipmentName}?`)) {
+    if (confirm(`Do you really want to delete this equipment ${equipment.equipmentName}?`)) {
       this.equipmentService.deleteEquipment(equipment).subscribe({
         next: () => {
-          this.snackBar.open('Equipment supprimée', 'Fermer', {
+          this.snackBar.open('Equipment deleted', 'Fermer', {
             duration: 3000,
           });
           this.fetchEquipments();
